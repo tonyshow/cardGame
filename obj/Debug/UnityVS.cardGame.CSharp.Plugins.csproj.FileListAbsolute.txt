@@ -1,0 +1,13 @@
+E:\CardGame\cardGame\Temp\UnityVS_bin\Debug\Assembly-CSharp-firstpass.dll
+E:\CardGame\cardGame\Temp\UnityVS_bin\Debug\Assembly-CSharp-firstpass.pdb
+E:\CardGame\cardGame\Temp\UnityVS_bin\Debug\UnityEditor.dll
+E:\CardGame\cardGame\Temp\UnityVS_bin\Debug\UnityEditor.iOS.Extensions.Xcode.dll
+E:\CardGame\cardGame\Temp\UnityVS_bin\Debug\UnityEngine.dll
+E:\CardGame\cardGame\Temp\UnityVS_bin\Debug\UnityEngine.UI.dll
+E:\CardGame\cardGame\Temp\UnityVS_bin\Debug\UnityEditor.xml
+E:\CardGame\cardGame\Temp\UnityVS_bin\Debug\UnityEditor.iOS.Extensions.Xcode.xml
+E:\CardGame\cardGame\obj\Debug\UnityVS.cardGame.CSharp.Plugins.csprojResolveAssemblyReference.cache
+E:\CardGame\cardGame\obj\Debug\Assembly-CSharp-firstpass.dll
+E:\CardGame\cardGame\obj\Debug\Assembly-CSharp-firstpass.pdb
+E:\CardGame\cardGame\Temp\UnityVS_bin\Debug\UnityEngine.xml
+E:\CardGame\cardGame\Temp\UnityVS_bin\Debug\UnityEngine.UI.xml

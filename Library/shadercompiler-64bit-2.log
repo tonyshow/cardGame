@@ -1,0 +1,25 @@
+Base path: C:/Program Files/Unity/Editor/Data
+Pipe name: \\.\pipe\UnityShaderCompiler-64bit-2-22736
+Cmd: getPlatforms
+Cmd: compileSnippet
+  error: 2 plat 4 at (47): 'clamp': no matching 0 parameter intrinsic function; Possible intrinsic functions are: clamp(float|half|double|min10float|min16float|int|uint|min12int|min16int|min16uint, float|half|double|min10float|min16float|int|uint|min12int|min16int|min16uint, float|half|double|min10float|min16float|int|uint|min12int|min16int|min16uint)\nCompiling Vertex program
+  error: 2 plat 4 at (47): syntax error: unexpected token 'f'\nCompiling Vertex program
+  api=4 type=0 insize=1571 outsize=0 kw= ok=0
+Cmd: compileSnippet
+  error: 2 plat 4 at (47): 'clamp': no matching 0 parameter intrinsic function; Possible intrinsic functions are: clamp(float|half|double|min10float|min16float|int|uint|min12int|min16int|min16uint, float|half|double|min10float|min16float|int|uint|min12int|min16int|min16uint, float|half|double|min10float|min16float|int|uint|min12int|min16int|min16uint)\nCompiling Fragment program
+  error: 2 plat 4 at (47): syntax error: unexpected token 'f'\nCompiling Fragment program
+  api=4 type=1 insize=1571 outsize=0 kw= ok=0
+Cmd: compileSnippet
+  error: 2 plat 8 at (47): 'clamp': no matching 0 parameter intrinsic function; Possible intrinsic functions are: clamp(float|half|double|min10float|min16float|int|uint|min12int|min16int|min16uint, float|half|double|min10float|min16float|int|uint|min12int|min16int|min16uint, float|half|double|min10float|min16float|int|uint|min12int|min16int|min16uint)\nCompiling Vertex program
+  error: 2 plat 8 at (47): syntax error: unexpected token 'f'\nCompiling Vertex program
+  api=8 type=0 insize=1571 outsize=0 kw= ok=0
+Cmd: compileSnippet
+  error: 2 plat 1 at (47): 'clamp': no matching 0 parameter intrinsic function; Possible intrinsic functions are: clamp(float|half|double|min10float|min16float|int|uint|min12int|min16int|min16uint, float|half|double|min10float|min16float|int|uint|min12int|min16int|min16uint, float|half|double|min10float|min16float|int|uint|min12int|min16int|min16uint)\nCompiling Fragment program
+  error: 2 plat 1 at (47): syntax error: unexpected token 'f'\nCompiling Fragment program
+  api=1 type=1 insize=1571 outsize=0 kw= ok=0
+Unhandled exception: Readfile from pipe failed. GLE=管道已结束。
+
+
+Quitting shader compiler process
+
+Crashed!
