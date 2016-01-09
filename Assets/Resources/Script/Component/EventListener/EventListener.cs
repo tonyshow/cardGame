@@ -31,20 +31,10 @@ public class EventListener : MonoBehaviour, IPointerClickHandler, IPointerDownHa
         EventListener listener = go.GetComponent<EventListener>();
         if (listener == null) listener = go.AddComponent<EventListener>();
         return listener;
-    }
-
-    static public EventListener GetKey(GameObject go, string key)
-    {
-        go.tag = key;
-        EventListener listener = go.GetComponent<EventListener>(); 
-        if (listener == null) listener = go.AddComponent<EventListener>();
-        
-        return listener;
-    }
+    } 
 
     public void OnPointerClick(PointerEventData eventData)
     {
-        Debug.Log("OnPointerClick");
         if (onClick != null) onClick(gameObject);
         if (onClickKey != null) onClickKey(gameObject, tag); 
     }
@@ -68,10 +58,6 @@ public class EventListener : MonoBehaviour, IPointerClickHandler, IPointerDownHa
         if (onUp != null) onUp(gameObject);
         if (onUpKey != null) onUpKey(gameObject, tag);
     }
-
-   
-  
-
-   
+     
 
 }

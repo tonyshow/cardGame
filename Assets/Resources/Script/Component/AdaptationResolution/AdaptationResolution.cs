@@ -20,5 +20,5 @@ public class AdaptationResolution : MonoBehaviour
         }
 
         this.gameObject.transform.localScale = new Vector3(scale, scale, scale);
-    }
+    } 
 }
