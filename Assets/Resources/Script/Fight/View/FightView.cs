@@ -4,6 +4,7 @@
  */
 using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 public delegate void FightTouchEve( Const.FIGHT_BTN_TYPE state);
 public class FightView : MonoBehaviour {
      
@@ -12,6 +13,10 @@ public class FightView : MonoBehaviour {
     public GameObject mainPanel;
     public GameObject bg_top;
     public GameObject bg_bottom;
+
+
+    private GameObject mouseObj = null;
+    private Vector3 downMousePos;
     FightTouchEve touchEve = new FightTouchEve(MineFightView.getInstance().FightViewTouchFn);
  
     void doSizeUI( GameObject obj , float scale )
@@ -72,5 +77,67 @@ public class FightView : MonoBehaviour {
             touchEve(Const.FIGHT_BTN_TYPE.ATK);
         }
     }
-     
+    double Angle(Vector3 o, Vector3 s, Vector3 e)
+    {
+        double cosfi = 0, fi = 0, norm = 0;
+        double dsx = s.x - o.x;
+        double dsy = s.y - o.y;
+        double dex = e.x - o.x;
+        double dey = e.y - o.y;
+
+        cosfi = dsx * dex + dsy * dey;
+        norm = (dsx * dsx + dsy * dsy) * (dex * dex + dey * dey);
+        cosfi /= System.Math.Sqrt(norm);
+
+        if (cosfi >= 1.0) return 0;
+        if (cosfi <= -1.0) return System.Math.PI;
+        fi = System.Math.Acos(cosfi);
+
+        if (180 * fi / System.Math.PI < 180)
+        {
+            return 180 * fi / System.Math.PI;
+        }
+        else
+        {
+            return 360 - 180 * fi / System.Math.PI;
+        }
+    }
+    void Update()
+    {
+        if (Input.GetButtonDown("Fire1"))
+        {
+            if (!mouseObj)
+            {
+                mouseObj = Object.Instantiate(Resources.Load("Prefab/mouseLine") as GameObject);
+                mouseObj.transform.parent = middPanel.transform;
+                mouseObj.transform.localScale = new Vector3(1,1,1);
+                mouseObj.GetComponent<RectTransform>().localPosition = Input.mousePosition - new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0);
+                downMousePos = Input.mousePosition;
+            } 
+            
+        }
+        if (Input.GetButton("Fire1"))
+        {
+            if (mouseObj)
+            { 
+                float space = Vector3.Distance(downMousePos, Input.mousePosition); 
+                Vector2 size = new Vector2(mouseObj.GetComponent<RectTransform>().sizeDelta.x, (float)space); 
+                mouseObj.GetComponent<RectTransform>().sizeDelta = size;
+                double angleOfLine =  Mathf.Atan2((downMousePos.y - Input.mousePosition.y), (downMousePos.x - Input.mousePosition.x)) * 180 / Mathf.PI +90 ; 
+                Vector3 nn = new Vector3(0, 0, (float)angleOfLine);
+                Quaternion rotation = Quaternion.Euler(nn);
+                mouseObj.GetComponent<RectTransform>().rotation = rotation; 
+                //mouseObj.GetComponent<BoxCollider2D>().size = size;
+               // mouseObj.GetComponent<BoxCollider2D>().offset = size * 0.5f;
+            } 
+        } 
+        if (Input.GetButtonUp("Fire1"))
+        {
+            if (mouseObj)
+            {
+               DestroyObject(mouseObj);
+            } 
+        }
+        
+    }
 }

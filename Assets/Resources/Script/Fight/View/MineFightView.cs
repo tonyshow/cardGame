@@ -32,7 +32,7 @@ public class MineFightView : MonoBehaviour {
         }
         return instance;
     }
-
+     
 	// Use this for initialization
 	void Start () 
     { 
@@ -109,10 +109,28 @@ public class MineFightView : MonoBehaviour {
 
                 viewCardDic.Add(key, card);
 
-                card.setPosition(viewPosList[i]);  
+                card.setPosition(viewPosList[i]);
+
+                EventListener.Get(card.getObj()).onDown = BtnCallBack;
          }
          outCardPosY = outCardPosY * doSize;
 	}
+
+     private void BtnCallBack(GameObject obj)
+     {
+         Debug.Log(obj.transform.name);
+         Card card =  obj.gameObject.GetComponent<Card>();
+         if (card.getCardState()==Card.CardState.waitFight)
+         {
+             card.setCardState(Card.CardState.none);
+             cardToNonePos(card.getCardData().Pos);
+         }
+         else if (card.getCardState() == Card.CardState.none)
+         {
+             card.setCardState(Card.CardState.waitFight);
+             cardToWaitPos(card.getCardData().Pos);
+         }
+     }
     public void DestroyCardsObject(Card card)
     {
         int pos = card.cardData.Pos;
@@ -128,7 +146,24 @@ public class MineFightView : MonoBehaviour {
         createCardObject(pos);
     }
 
-     
+    //将卡牌移动到待战位置
+    private void cardToWaitPos( int pos )
+    {
+        Card card = viewCardDic[pos];
+        card.setCardState(Card.CardState.waitFight);
+        GameObject cardObj = card.getObj();
+        cardObj.GetComponent<RectTransform>().DOLocalMoveY(viewPosList[pos].y + outCardPosY, 0.1f);   
+    }
+
+    //将卡牌移动到卡槽位置
+    private void cardToNonePos(int pos)
+    {
+        Card card = viewCardDic[pos];
+        card.setCardState(Card.CardState.none);
+        GameObject cardObj = card.getObj();
+        cardObj.GetComponent<RectTransform>().DOLocalMoveY(viewPosList[pos].y, 0.1f);
+    }
+
     private void noOut()
     {
         for (int i = 1; i <= Const.FRIST_CARD_NUM; ++i)
@@ -150,11 +185,8 @@ public class MineFightView : MonoBehaviour {
         else if (Const.FIGHT_BTN_TYPE.TIP == state)
         {
             noOut();
-            int posRand = Random.Range(1, 6);     
-            Card card = viewCardDic[posRand];
-            card.setCardState(Card.CardState.waitFight);
-            GameObject cardObj = card.getObj(); 
-            cardObj.GetComponent<RectTransform>().DOLocalMoveY(viewPosList[posRand].y + outCardPosY, 0.3f);     
+            int posRand = Random.Range(1, 6);
+            cardToWaitPos(posRand); 
         }
         else if (Const.FIGHT_BTN_TYPE.ATK == state)
         {
@@ -178,5 +210,6 @@ public class MineFightView : MonoBehaviour {
         card.setScale(doSize);
         card.moveTo(viewPosList[pos]);
         viewCardDic.Add(pos, card);
+        EventListener.Get(card.getObj()).onClick = BtnCallBack;
     }  
 }
