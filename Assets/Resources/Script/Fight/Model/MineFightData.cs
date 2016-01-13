@@ -51,6 +51,13 @@ public class MineFightData
         return CardsDic.Count;
     }
 
+    public int usingCardsNumber()
+    {
+        Debug.Log("场上剩余卡牌" + FightingCardsDic.Count);
+        return FightingCardsDic.Count;
+    }
+
+    
     //从总仓库拿取一张卡牌
     public CardData takeCard( int pos )
     {

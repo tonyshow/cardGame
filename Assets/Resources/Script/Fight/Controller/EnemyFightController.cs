@@ -2,6 +2,8 @@
 using System.Collections; 
 using System.Collections.Generic;
 public class EnemyFightController{
+    
+
     //单列模式
     public static EnemyFightController instance = null;
     public static EnemyFightController getInstance()

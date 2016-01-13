@@ -18,7 +18,20 @@ public class FightUIData
     private float middHeight = 1.0f;
 
 
-    
+    private Vector3 enemyVec3;
+    private Vector3 mineVec3;
+
+    public Vector3 EnemyVec3
+    {
+        set { enemyVec3 = value; }
+        get { return enemyVec3; }
+    }
+
+    public Vector3 MineVec3
+    {
+        set { mineVec3 = value; }
+        get { return mineVec3; }
+    }
 
     public void setFightUIHeight(float topHeight, float bottomHeight)
     {

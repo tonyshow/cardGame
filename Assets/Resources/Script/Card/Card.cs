@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine.UI;
 using DG.Tweening;
+using System.CodeDom;
 public class Card   : MonoBehaviour 
 {
     public enum CardState{
@@ -149,11 +150,19 @@ public class Card   : MonoBehaviour
     public void moveTo(Vector2 vec)
     { 
         Vector3 v3 = new Vector3(vec.x,vec.y,0.0f );
-        this.cardObj.GetComponent<RectTransform>().DOLocalMove(v3, 1.0f);
+         this.cardObj.GetComponent<RectTransform>().DOLocalMove(v3, 0.01f);
     }
-
+    public void moveTo(Vector2 vec, System.Action tt)
+    {
+        Vector3 v3 = new Vector3(vec.x, vec.y, 0.0f);
+        Tweener tw =  this.cardObj.GetComponent<RectTransform>().DOLocalMove(v3, 0.01f);
+        tw.OnComplete(delegate()
+        {
+            tt();
+        });
+    }
     public void correctRotate()
     {
-        this.cardObj.GetComponent<RectTransform>().DORotate(Vector3.zero,0.2f);
+        this.cardObj.GetComponent<RectTransform>().DORotate(Vector3.zero,0.05f);
     }
 }

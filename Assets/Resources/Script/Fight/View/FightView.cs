@@ -13,7 +13,8 @@ public class FightView : MonoBehaviour {
     public GameObject mainPanel;
     public GameObject bg_top;
     public GameObject bg_bottom;
-
+    public GameObject enemyPanel;
+    public GameObject minePanel;
 
     private GameObject mouseObj = null;
     private Vector3 downMousePos;
@@ -25,6 +26,10 @@ public class FightView : MonoBehaviour {
         obj.transform.localScale = obj.transform.localScale * scale; 
     }
 	void Start () {
+
+        //初始化出牌权
+        FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.MINE;
+        
         float doSizeH = AdaptationResolutionMG.getInstance().getDoSizeHeight();
        
         float bg_topHeight = bg_top.transform.GetComponent<RectTransform>().sizeDelta.y *doSizeH;
@@ -59,7 +64,11 @@ public class FightView : MonoBehaviour {
          
         EventListener.Get(ButtonNoOut).onClick = BtnCallBack;
         EventListener.Get(ButtonTip).onClick = BtnCallBack;
-        EventListener.Get(ButtonAtk).onClick = BtnCallBack;  
+        EventListener.Get(ButtonAtk).onClick = BtnCallBack;
+
+       
+        FightUIData.getInstance().EnemyVec3 = enemyPanel.transform.GetComponent<RectTransform>().position;
+        FightUIData.getInstance().MineVec3 = minePanel.GetComponent<RectTransform>().anchoredPosition3D;
 	}
     void BtnCallBack(GameObject obj)
     {

@@ -109,7 +109,14 @@ public class EnemyFightView : MonoBehaviour {
          } 
 	}
 
-     
+    public void Update()
+    {
+        if (FightController.getInstance().RightToPlay == FightController.RIGHTTOPLAY.ENEMY)
+        {
+            FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.MINE;
+            Debug.Log("敌人交出出牌权");
+        }
+    }
 
     public void DestroyCardsObject(CardEnemy card)
     {

@@ -5,6 +5,7 @@ using UnityEngine.UI;
 using DG.Tweening;
 public class MineFightView : MonoBehaviour {
 
+    public Text mineCardNumsObj;
     //场上征战的我方卡牌  //int 为pos
     private static Dictionary<int, Card> viewCardDic = new Dictionary<int, Card>();
 
@@ -14,6 +15,7 @@ public class MineFightView : MonoBehaviour {
     //int 为pos
     //private static Dictionary<int, CardData> cardDataDic = null;
 
+     
     //卡牌的父节点
     private static GameObject parentGame = null;
 
@@ -21,7 +23,10 @@ public class MineFightView : MonoBehaviour {
 
     private static List<Card> choiceCardList = new List<Card>();
 
+    private static Text _mineCardNumsObj;
+
     float outCardPosY = 6.0f;//待出卡牌的位置
+     
     //单列模式
     public static MineFightView instance = null;
     public static MineFightView getInstance()
@@ -35,8 +40,13 @@ public class MineFightView : MonoBehaviour {
      
 	// Use this for initialization
 	void Start () 
-    { 
-         MineFightController.getInstance().initMineFightData();
+    {
+        MineFightController.getInstance().initMineFightData();
+        _mineCardNumsObj = mineCardNumsObj;
+        _mineCardNumsObj.text = "剩余卡牌数量" + MineFightData.getInstance().cardsNumber().ToString();
+         
+
+         
 
          parentGame = this.gameObject;
          //初始化摆位
@@ -144,6 +154,8 @@ public class MineFightView : MonoBehaviour {
         viewCardDic.Remove(pos);
 
         createCardObject(pos);
+
+        _mineCardNumsObj.text = "剩余卡牌数量" + (MineFightData.getInstance().cardsNumber() + MineFightData.getInstance().usingCardsNumber()).ToString();
     }
 
     //将卡牌移动到待战位置
@@ -177,39 +189,54 @@ public class MineFightView : MonoBehaviour {
     }
     //处理战斗view的事件
     public  void FightViewTouchFn( Const.FIGHT_BTN_TYPE state)
-    {        
-        if (Const.FIGHT_BTN_TYPE.NO_OUT == state)
+    {
+        //场上必须得有卡牌才能响应
+        if (MineFightData.getInstance().usingCardsNumber() > 0 && FightController.getInstance().RightToPlay == FightController.RIGHTTOPLAY.MINE )
         {
-            noOut();
-        }
-        else if (Const.FIGHT_BTN_TYPE.TIP == state)
-        {
-            noOut();
-            int posRand = Random.Range(1, 6);
-            cardToWaitPos(posRand); 
-        }
-        else if (Const.FIGHT_BTN_TYPE.ATK == state)
-        {
-            for (int i = 1; i <= Const.FRIST_CARD_NUM; ++i)
-            { 
-                if ( viewCardDic.ContainsKey(i) && viewCardDic[i].getCardState() == Card.CardState.waitFight )
-                {
-                    int pos = viewCardDic[i].getCardData().Pos;                    
-                    viewCardDic[i].getObj().GetComponent<RectTransform>().DOLocalMoveY(viewPosList[pos].y + outCardPosY * 20 , 0.3f) ;      
-                }  
+            if (Const.FIGHT_BTN_TYPE.NO_OUT == state)
+            {
+                noOut();
             }
-          
+            else if (Const.FIGHT_BTN_TYPE.TIP == state)
+            {
+                noOut();
+                int posRand = Random.Range(1, 6);
+                for (int i = 1; i <= Const.FRIST_CARD_NUM; ++i)
+                    cardToWaitPos(i);
+
+            }
+
+            //出击
+            else if (Const.FIGHT_BTN_TYPE.ATK == state)
+            {
+                for (int i = 1; i <= Const.FRIST_CARD_NUM; ++i)
+                {
+                    if (viewCardDic.ContainsKey(i) && viewCardDic[i].getCardState() == Card.CardState.waitFight)
+                    {
+                        int pos = viewCardDic[i].getCardData().Pos;
+
+                        viewCardDic[i].getObj().GetComponent<RectTransform>().DOLocalMove(FightUIData.getInstance().EnemyVec3, 0.1f);
+                    }
+                }
+
+            }
         }
     }
 
     public  void createCardObject( int pos )
     {
-        CardData cardData =  MineFightController.getInstance().substitute(pos);
-        Card card = Card.create( cardData );
-        card.setParent(parentGame);
-        card.setScale(doSize);
-        card.moveTo(viewPosList[pos]);
-        viewCardDic.Add(pos, card);
-        EventListener.Get(card.getObj()).onClick = BtnCallBack;
+        if (MineFightData.getInstance().cardsNumber() > 0)
+        {
+            CardData cardData = MineFightController.getInstance().substitute(pos);
+            Card card = Card.create(cardData);
+            card.setParent(parentGame);
+            card.setScale(doSize);
+            card.moveTo(viewPosList[pos], () =>
+            {
+                FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.ENEMY; 
+            });
+            viewCardDic.Add(pos, card);
+            EventListener.Get(card.getObj()).onClick = BtnCallBack;
+        }        
     }  
 }
