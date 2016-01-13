@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using DG.Tweening;
 public class EnemyFightView : MonoBehaviour {
 
+    public Text enemyCardNumsObj;
+    public Text hpObj;
     //场上征战的敌方卡牌  //int 为pos
     private static Dictionary<int, Card> viewCardDic = new Dictionary<int, Card>();
 
@@ -17,6 +19,10 @@ public class EnemyFightView : MonoBehaviour {
     private static float doSize = 1.0f;
 
     private static float enemyCardScale = 0.5f;
+
+    private static Text _enemyCardNumsObj;
+
+    private static Text _hpObj;
     //单列模式
     public static EnemyFightView instance = null;
     public static EnemyFightView getInstance()
@@ -26,13 +32,17 @@ public class EnemyFightView : MonoBehaviour {
             instance = new EnemyFightView();
         }
         return instance;
-    }
+    } 
 
-	// Use this for initialization
 	void Start () 
     {
-        EnemyFightController.getInstance().initEnemyFightData();
+        _enemyCardNumsObj = enemyCardNumsObj;
+        _hpObj = hpObj;
 
+         EnemyFightController.getInstance().initEnemyFightData();
+
+         _enemyCardNumsObj.text = "剩余卡牌数量" + EnemyFightData.getInstance().cardsNumber().ToString();
+         _hpObj.text = EnemyFightData.getInstance().getHp().ToString();
          parentGame = this.gameObject;
          //初始化摆位
 
@@ -113,8 +123,8 @@ public class EnemyFightView : MonoBehaviour {
     {
         if (FightController.getInstance().RightToPlay == FightController.RIGHTTOPLAY.ENEMY)
         {
-            FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.MINE;
-            Debug.Log("敌人交出出牌权");
+            FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.ENEMYING; 
+            randAtk();
         }
     }
 
@@ -130,7 +140,7 @@ public class EnemyFightView : MonoBehaviour {
         //清理对象
         viewCardDic.Remove(pos);
 
-        createCardObject(pos);
+        createCardObject(pos);  
     }
 
     
@@ -139,8 +149,24 @@ public class EnemyFightView : MonoBehaviour {
         CardData cardData =  EnemyFightController.getInstance().substitute(pos);
         CardEnemy card = CardEnemy.create(cardData);
         card.setParent(parentGame);
+        card.setPosition(new Vector3(Screen.width, 0, 0));
         card.setScale(doSize * enemyCardScale);
-        card.moveTo(viewPosList[pos]);   
+        card.moveTo(viewPosList[pos], ()=>{
+            FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.MINE; 
+            _enemyCardNumsObj.text = "剩余卡牌数量" + (EnemyFightData.getInstance().cardsNumber() + EnemyFightData.getInstance().usingCardsNumber() ).ToString();
+        });   
         viewCardDic.Add(pos, card);
-    }  
+    }
+
+    public void randAtk()
+    {
+        int posRand = Random.Range(1, 6);
+        viewCardDic[posRand].getObj().transform.SetAsLastSibling();
+        viewCardDic[posRand].getObj().GetComponent<RectTransform>().DOLocalMove(FightUIData.getInstance().MineVec3+new Vector3(0,-50,0), 0.5f);
+    }
+
+    static public void Atkend()
+    {
+        _hpObj.text = EnemyFightData.getInstance().getHp().ToString(); 
+    }
 }

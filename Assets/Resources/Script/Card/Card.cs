@@ -92,10 +92,17 @@ public class Card   : MonoBehaviour
     public void setCardNumberView()
     { 
         int number = this.cardData.getNumber();
-        string path = "Res/Card/CardNumber/icon_number_"  + number; 
-        Texture texture = Resources.Load(path) as Texture; 
-        RawImage img = cardObj.transform.FindChild("cardType").FindChild("cardNum").GetComponent<RawImage>();
-        img.texture = texture;
+        if (number < 14)
+        {
+            string path = "Res/Card/CardNumber/icon_number_" + number;
+            Texture texture = Resources.Load(path) as Texture;
+            RawImage img = cardObj.transform.FindChild("cardType").FindChild("cardNum").GetComponent<RawImage>();
+            img.texture = texture;
+        }
+        else
+        {
+            cardObj.transform.FindChild("cardType").FindChild("cardNum").transform.gameObject.SetActive(false);
+        }
     }
     public void setCardState( CardState state )
     {
@@ -150,12 +157,12 @@ public class Card   : MonoBehaviour
     public void moveTo(Vector2 vec)
     { 
         Vector3 v3 = new Vector3(vec.x,vec.y,0.0f );
-         this.cardObj.GetComponent<RectTransform>().DOLocalMove(v3, 0.01f);
+         this.cardObj.GetComponent<RectTransform>().DOLocalMove(v3, 0.5f);
     }
     public void moveTo(Vector2 vec, System.Action tt)
     {
         Vector3 v3 = new Vector3(vec.x, vec.y, 0.0f);
-        Tweener tw =  this.cardObj.GetComponent<RectTransform>().DOLocalMove(v3, 0.01f);
+        Tweener tw =  this.cardObj.GetComponent<RectTransform>().DOLocalMove(v3, 0.5f);
         tw.OnComplete(delegate()
         {
             tt();

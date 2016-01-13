@@ -5,17 +5,16 @@ using UnityEngine.UI;
 using DG.Tweening;
 public class MineFightView : MonoBehaviour {
 
+    ShakeMainPanel shake = new ShakeMainPanel(FightView.shake);
+
     public Text mineCardNumsObj;
+    public Text hpObj;
     //场上征战的我方卡牌  //int 为pos
     private static Dictionary<int, Card> viewCardDic = new Dictionary<int, Card>();
 
     //5个卡位坐标
     private static Dictionary<int, Vector2> viewPosList = new Dictionary<int, Vector2>();
-
-    //int 为pos
-    //private static Dictionary<int, CardData> cardDataDic = null;
-
-     
+       
     //卡牌的父节点
     private static GameObject parentGame = null;
 
@@ -24,6 +23,7 @@ public class MineFightView : MonoBehaviour {
     private static List<Card> choiceCardList = new List<Card>();
 
     private static Text _mineCardNumsObj;
+    private static Text _hpObj;
 
     float outCardPosY = 6.0f;//待出卡牌的位置
      
@@ -41,12 +41,13 @@ public class MineFightView : MonoBehaviour {
 	// Use this for initialization
 	void Start () 
     {
+       // StartCoroutine(atkCard);
         MineFightController.getInstance().initMineFightData();
         _mineCardNumsObj = mineCardNumsObj;
         _mineCardNumsObj.text = "剩余卡牌数量" + MineFightData.getInstance().cardsNumber().ToString();
-         
 
-         
+        _hpObj = hpObj;
+        _hpObj.text = MineFightData.getInstance().getHp().ToString();
 
          parentGame = this.gameObject;
          //初始化摆位
@@ -128,19 +129,28 @@ public class MineFightView : MonoBehaviour {
 
      private void BtnCallBack(GameObject obj)
      {
-         Debug.Log(obj.transform.name);
-         Card card =  obj.gameObject.GetComponent<Card>();
-         if (card.getCardState()==Card.CardState.waitFight)
+         if (FightController.getInstance().RightToPlay == FightController.RIGHTTOPLAY.MINE)
          {
-             card.setCardState(Card.CardState.none);
-             cardToNonePos(card.getCardData().Pos);
-         }
-         else if (card.getCardState() == Card.CardState.none)
-         {
-             card.setCardState(Card.CardState.waitFight);
-             cardToWaitPos(card.getCardData().Pos);
+             Card card = obj.gameObject.GetComponent<Card>();
+             if (card.getCardState() == Card.CardState.waitFight)
+             {
+                 card.setCardState(Card.CardState.none);
+                 cardToNonePos(card.getCardData().Pos);
+             }
+             else if (card.getCardState() == Card.CardState.none)
+             {
+                 card.setCardState(Card.CardState.waitFight);
+                 cardToWaitPos(card.getCardData().Pos);
+             }
          }
      }
+
+    //遭受攻击
+    static public void Atkend()
+    {
+        _hpObj.text = MineFightData.getInstance().getHp().ToString();
+    }
+
     public void DestroyCardsObject(Card card)
     {
         int pos = card.cardData.Pos;
@@ -156,6 +166,8 @@ public class MineFightView : MonoBehaviour {
         createCardObject(pos);
 
         _mineCardNumsObj.text = "剩余卡牌数量" + (MineFightData.getInstance().cardsNumber() + MineFightData.getInstance().usingCardsNumber()).ToString();
+         
+        shake();
     }
 
     //将卡牌移动到待战位置
@@ -190,6 +202,7 @@ public class MineFightView : MonoBehaviour {
     //处理战斗view的事件
     public  void FightViewTouchFn( Const.FIGHT_BTN_TYPE state)
     {
+     
         //场上必须得有卡牌才能响应
         if (MineFightData.getInstance().usingCardsNumber() > 0 && FightController.getInstance().RightToPlay == FightController.RIGHTTOPLAY.MINE )
         {
@@ -201,28 +214,31 @@ public class MineFightView : MonoBehaviour {
             {
                 noOut();
                 int posRand = Random.Range(1, 6);
-                for (int i = 1; i <= Const.FRIST_CARD_NUM; ++i)
-                    cardToWaitPos(i);
-
+                cardToWaitPos(posRand); 
             }
-
+               
             //出击
             else if (Const.FIGHT_BTN_TYPE.ATK == state)
             {
-                for (int i = 1; i <= Const.FRIST_CARD_NUM; ++i)
-                {
-                    if (viewCardDic.ContainsKey(i) && viewCardDic[i].getCardState() == Card.CardState.waitFight)
-                    {
-                        int pos = viewCardDic[i].getCardData().Pos;
-
-                        viewCardDic[i].getObj().GetComponent<RectTransform>().DOLocalMove(FightUIData.getInstance().EnemyVec3, 0.1f);
-                    }
-                }
-
+                atkCard();
             }
         }
     }
 
+
+    IEnumerator atkCard()
+    {
+        for (int i = 1; i <= Const.FRIST_CARD_NUM; ++i)
+        {
+            if (viewCardDic.ContainsKey(i) && viewCardDic[i].getCardState() == Card.CardState.waitFight)
+            {
+                viewCardDic[i].getObj().GetComponent<RectTransform>().DOLocalMove(FightUIData.getInstance().EnemyVec3, 0.5f);
+                viewCardDic[i].getObj().transform.SetAsLastSibling();
+                FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.MINEING;
+                yield return new WaitForSeconds(0.5f);
+            }
+        }
+    }
     public  void createCardObject( int pos )
     {
         if (MineFightData.getInstance().cardsNumber() > 0)
@@ -230,6 +246,7 @@ public class MineFightView : MonoBehaviour {
             CardData cardData = MineFightController.getInstance().substitute(pos);
             Card card = Card.create(cardData);
             card.setParent(parentGame);
+            card.setPosition(new Vector3(Screen.width, 0, 0));
             card.setScale(doSize);
             card.moveTo(viewPosList[pos], () =>
             {

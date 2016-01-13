@@ -5,7 +5,9 @@
 using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
+using DG.Tweening;
 public delegate void FightTouchEve( Const.FIGHT_BTN_TYPE state);
+public delegate void ShakeMainPanel();
 public class FightView : MonoBehaviour {
      
     public GameObject middPanelShow;
@@ -18,8 +20,8 @@ public class FightView : MonoBehaviour {
 
     private GameObject mouseObj = null;
     private Vector3 downMousePos;
-    FightTouchEve touchEve = new FightTouchEve(MineFightView.getInstance().FightViewTouchFn);
- 
+    static private GameObject _mainPanel;
+    FightTouchEve touchEve = new FightTouchEve(MineFightView.getInstance().FightViewTouchFn); 
     void doSizeUI( GameObject obj , float scale )
     {
         obj.transform.GetComponent<RectTransform>().anchoredPosition3D = obj.transform.GetComponent<RectTransform>().anchoredPosition3D * scale;
@@ -68,8 +70,17 @@ public class FightView : MonoBehaviour {
 
        
         FightUIData.getInstance().EnemyVec3 = enemyPanel.transform.GetComponent<RectTransform>().position;
-        FightUIData.getInstance().MineVec3 = minePanel.GetComponent<RectTransform>().anchoredPosition3D;
+        FightUIData.getInstance().MineVec3 = minePanel.transform.GetComponent<RectTransform>().position;
+
+        _mainPanel = mainPanel;
 	}
+
+    //敌方受到攻击
+    static public void shake()
+    {
+        Debug.Log("抖动"); 
+        _mainPanel.transform.DOShakePosition(0.2f,30);
+    }
     void BtnCallBack(GameObject obj)
     {
         string objName = obj.name;
@@ -135,9 +146,7 @@ public class FightView : MonoBehaviour {
                 double angleOfLine =  Mathf.Atan2((downMousePos.y - Input.mousePosition.y), (downMousePos.x - Input.mousePosition.x)) * 180 / Mathf.PI +90 ; 
                 Vector3 nn = new Vector3(0, 0, (float)angleOfLine);
                 Quaternion rotation = Quaternion.Euler(nn);
-                mouseObj.GetComponent<RectTransform>().rotation = rotation; 
-                //mouseObj.GetComponent<BoxCollider2D>().size = size;
-               // mouseObj.GetComponent<BoxCollider2D>().offset = size * 0.5f;
+                mouseObj.GetComponent<RectTransform>().rotation = rotation;  
             } 
         } 
         if (Input.GetButtonUp("Fire1"))

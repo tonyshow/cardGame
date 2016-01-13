@@ -14,6 +14,7 @@ public class MineFightData
     //场上卡牌库
     Dictionary<int, CardData> FightingCardsDic = new Dictionary<int, CardData>();
 
+    private int hp;
     //单列模式
     public static MineFightData instance = null;
     public static MineFightData getInstance()
@@ -41,8 +42,21 @@ public class MineFightData
                 int id = cards.getId();
                 indexList.Add(id);
                 CardsDic.Add( id , cards);
+
+                hp = hp + number;
             }   
         }
+
+        //小王大王数据
+        for (int type = (int)CardType.xiao; type <= (int)CardType.da; ++type)
+        {
+            int number = type + 9;
+            CardData cards = new CardData(CardCosplay.Mine, (CardType)type, number);
+            int id = cards.getId();
+            indexList.Add(id);
+            CardsDic.Add(id, cards);
+            hp = hp + number;
+        } 
     }
 
     //总仓库剩余卡牌数
@@ -56,8 +70,14 @@ public class MineFightData
         Debug.Log("场上剩余卡牌" + FightingCardsDic.Count);
         return FightingCardsDic.Count;
     }
-
-    
+    public int getHp()
+    {
+        return this.hp;
+    }
+    public void subHp(int _hp)
+    {
+        this.hp = this.hp - _hp;
+    }
     //从总仓库拿取一张卡牌
     public CardData takeCard( int pos )
     {
@@ -76,6 +96,8 @@ public class MineFightData
     //参数为卡牌唯一id
     public void destroyCard(int id)
     {
+        int number = FightingCardsDic[id].getNumber();
+        EnemyFightData.getInstance().subHp(number); 
         FightingCardsDic.Remove(id);
     }
 }
