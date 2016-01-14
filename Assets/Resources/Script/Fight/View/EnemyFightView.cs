@@ -41,7 +41,7 @@ public class EnemyFightView : MonoBehaviour {
 
          EnemyFightController.getInstance().initEnemyFightData();
 
-         _enemyCardNumsObj.text = "剩余卡牌数量" + EnemyFightData.getInstance().cardsNumber().ToString();
+         _enemyCardNumsObj.text = EnemyFightData.getInstance().cardsNumber().ToString();
          _hpObj.text = EnemyFightData.getInstance().getHp().ToString();
          parentGame = this.gameObject;
          //初始化摆位
@@ -152,7 +152,7 @@ public class EnemyFightView : MonoBehaviour {
         card.setPosition(new Vector3(Screen.width, 0, 0));
         card.setScale(doSize * enemyCardScale);
         card.moveTo(viewPosList[pos], ()=>{
-            _enemyCardNumsObj.text = "剩余卡牌数量" + (EnemyFightData.getInstance().cardsNumber() + EnemyFightData.getInstance().usingCardsNumber() ).ToString();
+            _enemyCardNumsObj.text = (EnemyFightData.getInstance().cardsNumber() + EnemyFightData.getInstance().usingCardsNumber() ).ToString();
         });   
         viewCardDic.Add(pos, card);
     }
@@ -164,6 +164,7 @@ public class EnemyFightView : MonoBehaviour {
         viewCardDic[posRand].getObj().GetComponent<RectTransform>().DOLocalMove(FightUIData.getInstance().MineVec3+new Vector3(0,-50,0), 0.5f);
     }
 
+    //敌方遭受攻击结束
     static public void Atkend()
     {
         _hpObj.text = EnemyFightData.getInstance().getHp().ToString(); 

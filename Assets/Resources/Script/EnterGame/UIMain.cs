@@ -8,7 +8,7 @@ public class UIMain : MonoBehaviour
     AssetBundle assetbundle = null;
     void Start()
     {
-        CreatImage(loadSprite("icon_button")); 
+       // CreatImage(loadSprite("icon_button")); 
     }
 
     private void CreatImage(GameObject go)
