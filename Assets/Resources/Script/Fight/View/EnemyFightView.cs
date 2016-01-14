@@ -152,7 +152,6 @@ public class EnemyFightView : MonoBehaviour {
         card.setPosition(new Vector3(Screen.width, 0, 0));
         card.setScale(doSize * enemyCardScale);
         card.moveTo(viewPosList[pos], ()=>{
-            FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.MINE; 
             _enemyCardNumsObj.text = "剩余卡牌数量" + (EnemyFightData.getInstance().cardsNumber() + EnemyFightData.getInstance().usingCardsNumber() ).ToString();
         });   
         viewCardDic.Add(pos, card);

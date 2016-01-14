@@ -6,7 +6,7 @@ using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
 using DG.Tweening;
-public delegate void FightTouchEve( Const.FIGHT_BTN_TYPE state);
+public delegate IEnumerator FightTouchEve( Const.FIGHT_BTN_TYPE state);
 public delegate void ShakeMainPanel();
 public class FightView : MonoBehaviour {
      
@@ -86,15 +86,15 @@ public class FightView : MonoBehaviour {
         string objName = obj.name;
         if ("ButtonNoOut" == objName)
         {
-            touchEve(Const.FIGHT_BTN_TYPE.NO_OUT); 
+            StartCoroutine(touchEve(Const.FIGHT_BTN_TYPE.NO_OUT)); 
         }
         else if ("ButtonTip" == objName)
         {
-            touchEve(Const.FIGHT_BTN_TYPE.TIP);
+            StartCoroutine(touchEve(Const.FIGHT_BTN_TYPE.TIP)); 
         }
         else if ("ButtonAtk" == objName)
         {
-            touchEve(Const.FIGHT_BTN_TYPE.ATK);
+            StartCoroutine(touchEve(Const.FIGHT_BTN_TYPE.ATK)); 
         }
     }
     double Angle(Vector3 o, Vector3 s, Vector3 e)

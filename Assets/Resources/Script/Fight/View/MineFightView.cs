@@ -40,8 +40,7 @@ public class MineFightView : MonoBehaviour {
      
 	// Use this for initialization
 	void Start () 
-    {
-       // StartCoroutine(atkCard);
+    {  
         MineFightController.getInstance().initMineFightData();
         _mineCardNumsObj = mineCardNumsObj;
         _mineCardNumsObj.text = "剩余卡牌数量" + MineFightData.getInstance().cardsNumber().ToString();
@@ -146,9 +145,10 @@ public class MineFightView : MonoBehaviour {
      }
 
     //遭受攻击
-    static public void Atkend()
+    static public void Atkend() 
     {
         _hpObj.text = MineFightData.getInstance().getHp().ToString();
+        FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.MINE;
     }
 
     public void DestroyCardsObject(Card card)
@@ -176,7 +176,8 @@ public class MineFightView : MonoBehaviour {
         Card card = viewCardDic[pos];
         card.setCardState(Card.CardState.waitFight);
         GameObject cardObj = card.getObj();
-        cardObj.GetComponent<RectTransform>().DOLocalMoveY(viewPosList[pos].y + outCardPosY, 0.1f);   
+        cardObj.GetComponent<RectTransform>().DOLocalMoveY(viewPosList[pos].y + outCardPosY, 0.1f);
+        cardObj.GetComponent<RectTransform>().DOShakeScale(0.5f, 0.1f,10,1);
     }
 
     //将卡牌移动到卡槽位置
@@ -196,13 +197,21 @@ public class MineFightView : MonoBehaviour {
             {
                 viewCardDic[i].setCardState(Card.CardState.none);
                 viewCardDic[i].getObj().GetComponent<RectTransform>().anchoredPosition3D = viewPosList[i];
+                Card card = viewCardDic[i].getObj().GetComponent<Card>();
+                card.setCardState(Card.CardState.none);
             }
         } 
     }
-    //处理战斗view的事件
-    public  void FightViewTouchFn( Const.FIGHT_BTN_TYPE state)
+    IEnumerator delay()
     {
-     
+        yield return new WaitForSeconds(0.5f);
+        Debug.Log("delay");
+    }
+    
+    //处理战斗view的事件
+    public  IEnumerator FightViewTouchFn( Const.FIGHT_BTN_TYPE state)
+    {
+       
         //场上必须得有卡牌才能响应
         if (MineFightData.getInstance().usingCardsNumber() > 0 && FightController.getInstance().RightToPlay == FightController.RIGHTTOPLAY.MINE )
         {
@@ -215,30 +224,30 @@ public class MineFightView : MonoBehaviour {
                 noOut();
                 int posRand = Random.Range(1, 6);
                 cardToWaitPos(posRand); 
-            }
-               
+            } 
             //出击
             else if (Const.FIGHT_BTN_TYPE.ATK == state)
             {
-                atkCard();
+                
+                for (int i = 1; i <= Const.FRIST_CARD_NUM; ++i)
+                {
+                    if (viewCardDic.ContainsKey(i) && viewCardDic[i].getCardState() == Card.CardState.waitFight)
+                    {
+                        FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.MINEING;
+                        int pos = viewCardDic[i].getCardData().Pos;
+                        viewCardDic[i].getObj().transform.SetAsLastSibling();
+                        viewCardDic[i].getObj().GetComponent<RectTransform>().DOLocalMove(FightUIData.getInstance().EnemyVec3, 0.1f);
+                        yield return new WaitForSeconds(0.3f);
+                    }
+                }
+                yield return new WaitForSeconds(0.3f);
+                FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.ENEMY;
             }
         }
     }
 
 
-    IEnumerator atkCard()
-    {
-        for (int i = 1; i <= Const.FRIST_CARD_NUM; ++i)
-        {
-            if (viewCardDic.ContainsKey(i) && viewCardDic[i].getCardState() == Card.CardState.waitFight)
-            {
-                viewCardDic[i].getObj().GetComponent<RectTransform>().DOLocalMove(FightUIData.getInstance().EnemyVec3, 0.5f);
-                viewCardDic[i].getObj().transform.SetAsLastSibling();
-                FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.MINEING;
-                yield return new WaitForSeconds(0.5f);
-            }
-        }
-    }
+    
     public  void createCardObject( int pos )
     {
         if (MineFightData.getInstance().cardsNumber() > 0)
@@ -248,10 +257,7 @@ public class MineFightView : MonoBehaviour {
             card.setParent(parentGame);
             card.setPosition(new Vector3(Screen.width, 0, 0));
             card.setScale(doSize);
-            card.moveTo(viewPosList[pos], () =>
-            {
-                FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.ENEMY; 
-            });
+            card.moveTo(viewPosList[pos]);
             viewCardDic.Add(pos, card);
             EventListener.Get(card.getObj()).onClick = BtnCallBack;
         }        
