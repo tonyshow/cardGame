@@ -43,7 +43,7 @@ public class MineFightView : MonoBehaviour {
     {  
         MineFightController.getInstance().initMineFightData();
         _mineCardNumsObj = mineCardNumsObj;
-        _mineCardNumsObj.text = "剩余卡牌数量" + MineFightData.getInstance().cardsNumber().ToString();
+        _mineCardNumsObj.text = MineFightData.getInstance().cardsNumber().ToString();
 
         _hpObj = hpObj;
         _hpObj.text = MineFightData.getInstance().getHp().ToString();
@@ -165,7 +165,7 @@ public class MineFightView : MonoBehaviour {
 
         createCardObject(pos);
 
-        _mineCardNumsObj.text = "剩余卡牌数量" + (MineFightData.getInstance().cardsNumber() + MineFightData.getInstance().usingCardsNumber()).ToString();
+        _mineCardNumsObj.text = (MineFightData.getInstance().cardsNumber() + MineFightData.getInstance().usingCardsNumber()).ToString();
          
         shake();
     }
@@ -236,7 +236,7 @@ public class MineFightView : MonoBehaviour {
                         FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.MINEING;
                         int pos = viewCardDic[i].getCardData().Pos;
                         viewCardDic[i].getObj().transform.SetAsLastSibling();
-                        viewCardDic[i].getObj().GetComponent<RectTransform>().DOLocalMove(FightUIData.getInstance().EnemyVec3, 0.1f);
+                        viewCardDic[i].getObj().GetComponent<RectTransform>().DOLocalMove(FightUIData.getInstance().EnemyVec3+new Vector3(0,Screen.height*0.2f,0), 0.1f);
                         yield return new WaitForSeconds(0.3f);
                     }
                 }

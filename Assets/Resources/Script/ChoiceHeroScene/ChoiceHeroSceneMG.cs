@@ -13,9 +13,7 @@ public class ChoiceHeroSceneMG : MonoBehaviour {
 	// Use this for initialization
     void Eve( GameObject obj  )
     {
-        Application.LoadLevel("EnterGame");
-        //返回到上界面
-      //  SMGameEnvironment.Instance.SceneManager.LoadScreen("EnterGame"); 
+        Application.LoadLevel("EnterGame"); 
     }
 
     void EveSure(GameObject obj)
@@ -25,9 +23,7 @@ public class ChoiceHeroSceneMG : MonoBehaviour {
         int tag = int.Parse(touchTag);
         if (tag == 1)
         {
-            Application.LoadLevel("ChoiceEnemy");
-            //SMGameEnvironment.Instance.SceneManager.LoadScreen("ChoiceEnemy"); 
-            //MsgLoadingg.create("Fight");
+            Application.LoadLevel("ChoiceEnemy"); 
         }
         else
         {  
@@ -45,27 +41,20 @@ public class ChoiceHeroSceneMG : MonoBehaviour {
     }
     void Lock( GameObject item )
     {
-        RawImage icon = item.transform.Find("icon").gameObject.GetComponent<RawImage>();
-       // Material materialGray = Resources.Load("Material/gray") as Material;
-      //  icon.material = materialGray;
+        RawImage icon = item.transform.Find("icon").gameObject.GetComponent<RawImage>(); 
         icon.color = new Color32(255, 255, 255, 255);
         GameObject objBtn = item.transform.Find("Button").gameObject;
        
         Button button = objBtn.gameObject.GetComponent<Button>();
-        Image img = objBtn.gameObject.GetComponent<Image>(); 
-       // img.material = materialGray;
+        Image img = objBtn.gameObject.GetComponent<Image>();  
 
-        Image btnImg = objBtn.transform.Find("Image").gameObject.GetComponent<Image>();
-       // btnImg.material = materialGray;
+        Image btnImg = objBtn.transform.Find("Image").gameObject.GetComponent<Image>(); 
          
-        Image infoImg = item.transform.Find("Image/Image").gameObject.GetComponent<Image>();
-      //  infoImg.material = materialGray;
+        Image infoImg = item.transform.Find("Image/Image").gameObject.GetComponent<Image>(); 
 
-        Image infoImgbg = item.transform.Find("Image").gameObject.GetComponent<Image>();
-        //infoImgbg.material = materialGray;
+        Image infoImgbg = item.transform.Find("Image").gameObject.GetComponent<Image>(); 
          
-        Image cardBgImg = item.transform.Find("cardBg").gameObject.GetComponent<Image>();
-        //cardBgImg.material = materialGray; 
+        Image cardBgImg = item.transform.Find("cardBg").gameObject.GetComponent<Image>(); 
     }
 
 	void Start () {

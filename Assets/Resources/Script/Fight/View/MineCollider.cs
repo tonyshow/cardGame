@@ -24,6 +24,7 @@ public class MineCollider : MonoBehaviour {
                 tweener.OnComplete(delegate()
                 {
                     touchEve(card);
+					atk();
                 });
                  
                 //掉血效果 
@@ -37,8 +38,7 @@ public class MineCollider : MonoBehaviour {
                 tw.OnComplete(delegate()
                 {
                     DestroyObject(HpObj);
-                }); 
-                atk();
+                });  
             }
             else
             {

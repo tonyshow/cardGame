@@ -44,8 +44,7 @@ public class EnemyFightData
                 CardData cards = new CardData(CardCosplay.Enemy, (CardType)type, number);
                 int id = cards.getId();
                 indexList.Add(id);
-                cardsDic.Add(id, cards);
-
+                cardsDic.Add(id, cards); 
                 hp = hp + number;
             }  
         }
@@ -74,6 +73,11 @@ public class EnemyFightData
     public void subHp(int _hp)
     {
         this.hp = this.hp - _hp;
+
+        if (this.hp <= 0)
+        {
+            FightWin.create();
+        }
     }
     public int usingCardsNumber()
     {

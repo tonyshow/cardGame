@@ -77,6 +77,10 @@ public class MineFightData
     public void subHp(int _hp)
     {
         this.hp = this.hp - _hp;
+        if (this.hp <= 0)
+        {
+            FightWin.create();
+        }
     }
     //从总仓库拿取一张卡牌
     public CardData takeCard( int pos )

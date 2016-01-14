@@ -89,7 +89,7 @@ public class FightView : MonoBehaviour {
             StartCoroutine(touchEve(Const.FIGHT_BTN_TYPE.NO_OUT)); 
         }
         else if ("ButtonTip" == objName)
-        {
+        { 
             StartCoroutine(touchEve(Const.FIGHT_BTN_TYPE.TIP)); 
         }
         else if ("ButtonAtk" == objName)
