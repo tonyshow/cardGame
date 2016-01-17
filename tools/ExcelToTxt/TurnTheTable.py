@@ -60,7 +60,7 @@ def createCS(outPath,name,nrows,ncols,fileKeys,indexNotes):
 	tm_min  = times.tm_min
 	tm_sec  = times.tm_sec
 	allTime = '//Create Time :'+ str(year)+'-'+str(tm_mon)+'-'+str(tm_mday)+' '+str(tm_hour)+':'+str(tm_min)+':'+str(tm_sec); 
-	FileCS.write(createOkStr(allTime))
+	FileCS.write(allTime+'\t')
 	FileCS.write(createOkStr("using UnityEngine;"))
 	FileCS.write(createOkStr("using System.Collections;"))
 	FileCS.write(createOkStr("using System.Collections.Generic;"))
@@ -69,6 +69,9 @@ def createCS(outPath,name,nrows,ncols,fileKeys,indexNotes):
 	FileCS.write(createOkStr("using UnityEngine;"))
 	FileCS.write(createOkStr("public class "+thisClassName))
 	FileCS.write(createOkStr("{"))
+	
+	FileCS.write(createOkStr("	private TextAsset textAsset;"))
+	FileCS.write(createOkStr("	private string[]  strArray;")) 
 	
 	#表索引字典 
 	fileKeysList = fileKeys.split("&"); 
@@ -86,7 +89,7 @@ def createCS(outPath,name,nrows,ncols,fileKeys,indexNotes):
 			if(mIndexNum%2==0):
 				item=item+str(key)+'},'
 			else:
-				item='		{"'+item+key+'",'
+				item='		{"'+item+str(key)+'",'
 		s = indexNotesList[no];
 		s.decode("UTF-8")
 		item = item + '		//' + s ;
@@ -108,11 +111,57 @@ def createCS(outPath,name,nrows,ncols,fileKeys,indexNotes):
 	FileCS.write(createOkStr("	}"))  
 	FileCS.write(createOkStr(""))
 	
+ 
+	
+	FileCS.write(createOkStr("	private void initData()"))
+	FileCS.write(createOkStr("	{"))
+	FileCS.write(createOkStr("		textAsset = Resources.Load(\"Data/Data/"+name+"\") as TextAsset;"))
+	FileCS.write(createOkStr("		string text = textAsset.text;"))
+	FileCS.write(createOkStr("		strArray = text.Split(\'\\n\');"))
+	FileCS.write(createOkStr("		string[] strArraysss = text.Split(\'\\t\');"))
+	FileCS.write(createOkStr("	}")) 
+	FileCS.write(createOkStr(""))
+	
+	
+	FileCS.write(createOkStr("	public string getData( int index,string key )"))
+	FileCS.write(createOkStr("	{"))
+	FileCS.write(createOkStr("		if ( null == textAsset )"))
+	FileCS.write(createOkStr("		{"))
+	FileCS.write(createOkStr("			this.initData();"))
+	FileCS.write(createOkStr("		}"))
+	FileCS.write(createOkStr("		index = index + 1;"))
+	FileCS.write(createOkStr("		string array = strArray[index];"))
+	FileCS.write(createOkStr("		string[] strList = array.Split('\t');"))
+	FileCS.write(createOkStr("		string vlue = strList[this.getIndex(key)];"))
+	FileCS.write(createOkStr("		return vlue;"))
+	FileCS.write(createOkStr("	}"))
+	FileCS.write(createOkStr("")) 
+	
+	FileCS.write(createOkStr("	public string[] getStrArray()"))
+	FileCS.write(createOkStr("	{"))
+	FileCS.write(createOkStr("		if ( null == textAsset )"))
+	FileCS.write(createOkStr("		{"))
+	FileCS.write(createOkStr("			this.initData();"))
+	FileCS.write(createOkStr("		}"))
+	FileCS.write(createOkStr("		return strArray;"))
+	FileCS.write(createOkStr("	}"))
+	FileCS.write(createOkStr(""))
+	
+	FileCS.write(createOkStr("	public TextAsset getTextAsset()"))
+	FileCS.write(createOkStr("	{"))
+	FileCS.write(createOkStr("		if ( null == textAsset )"))
+	FileCS.write(createOkStr("		{"))
+	FileCS.write(createOkStr("			this.initData();"))
+	FileCS.write(createOkStr("		}"))
+	FileCS.write(createOkStr("		return textAsset;"))
+	FileCS.write(createOkStr("	}"))
+	FileCS.write(createOkStr(""))	  
+		
 	#函数获取表索引
 	#FileCS.write(createOkStr("	/*通过索引获取当前索引在第几列*/"))	
 	FileCS.write(createOkStr("	public int getIndex(string keys){"))
 	FileCS.write(createOkStr("		if(null==indexList[keys]){"))
-	FileCS.write(createOkStr("			Debug.Error(\"no find keys: \"+keys);"))
+	FileCS.write(createOkStr("			Debug.LogError(\"no find keys: \"+keys);"))
 	FileCS.write(createOkStr("			return 0;"))
 	FileCS.write(createOkStr("		}"))
 	
@@ -177,7 +226,7 @@ def createTxt(paths,name,outPath):
 						v1 = re.sub('\.0*$', "", v1) 
 					v1 = v1.rstrip()
 					v =  v +v1+ '	'
-				dataStr = '\n'+dataStr + v+ '\r'
+				dataStr = dataStr + v+ '\n'
 				txtFile.write(dataStr)  
 			txtFile.close()
 			createCS(outPath+'\\' +name+classAfter+'.cs',name,sheet.nrows,sheet.ncols,fileKeys,indexNotes)	
