@@ -10,8 +10,10 @@ import xlrd
 import re 
 import codecs
 path = os.getcwd() 
-dir="./in"			#源文件存储目录
-outPath="./out/" 	#目标文件存储目录
+dir='./in'			#源文件存储目录
+outPath='./out/' 	#目标文件存储目录
+csPath = 'Script'	#目标文件存储目录
+txtPath = 'Data'#目标文件存储目录
 classAfter='DataManager'
 indexLine = 1		
 def delete_file_folder(src): 
@@ -43,6 +45,8 @@ def createOkStr(data):
 
 #创建.cs文件
 def createCS(outPath,name,nrows,ncols,fileKeys,indexNotes): 
+	outPath= outPath.replace('out','out/'+csPath);
+	print'createCS -- outPath = %s '%outPath
 	#cs类名
 	thisClassName = name+classAfter
 	FileCS= open(outPath,'wb+')
@@ -143,8 +147,12 @@ def createTxt(paths,name,outPath):
 	fileKeys = '';
 	indexNotes='';
 	for sheetName in wb.sheet_names(): 
-		if(sheetName == 'Sheet1'):    
-			txtFile=open(outPath+'\\'+name+'.txt','wb+')
+		if(sheetName == 'Sheet1'):  
+			
+			
+			fullTxtPath = outPath+'\\'+name+'.txt';
+			fullTxtPath= fullTxtPath.replace('out','out/'+txtPath); 
+			txtFile=open(fullTxtPath,'wb+')
 			txtFile.read().decode("utf-8")
 			print'create txt file : %s'%name+'.txt'
 			sheet = wb.sheet_by_name(sheetName)
@@ -190,12 +198,19 @@ def file_folder(src):
 			createTxt(src,fileName,outFilePath)
 		except:
 			pass
+	#文件夹部分
 	elif os.path.isdir(src):
 		try: 
 			outFolder_1 = src;
 			outFolder_1 = outFolder_1.replace('in','out')
 			outFolder_1 = outFolder_1.replace('\\','/')  
-			os.mkdir( outFolder_1 ) 
+			
+			csFolderPath  = outFolder_1;
+			txtFolderPath = outFolder_1;
+			csFolderPath   = csFolderPath.replace('out','out/'+csPath)
+			txtFolderPath  = txtFolderPath.replace('out','out/'+txtPath) 
+			os.mkdir( csFolderPath )
+			os.mkdir( txtFolderPath )
 		except:
 			pass 
 		for item in os.listdir(src):
@@ -212,7 +227,18 @@ def main():
 		sjdghg = ''
 	else:
 		os.mkdir( outPath ) 
-	removeFileInFirstDir(outPath)
+	removeFileInFirstDir(outPath) 
+	
+	
+	if  (os.path.exists(outPath + csPath)):
+		sjdghg = ''
+	else:
+		os.mkdir( outPath + csPath ) 
+		
+	if  (os.path.exists(outPath + txtPath)):
+		sjdghg = ''
+	else:
+		os.mkdir( outPath + txtPath )
 	
 	file_folder(dir);
 main()
