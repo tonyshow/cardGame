@@ -22,6 +22,7 @@ public enum CardType
     xiao = 5,       //小王
     da = 6          //大王
 }
+ 
 
 //public static int typeBit = 10000;
 public class CardData

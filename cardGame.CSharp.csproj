@@ -13,11 +13,13 @@
     <TargetFrameworkIdentifier>.NETFramework</TargetFrameworkIdentifier>
     <TargetFrameworkVersion>v3.5</TargetFrameworkVersion>
     <TargetFrameworkProfile>Unity Subset v3.5</TargetFrameworkProfile>
-    <CompilerResponseFile></CompilerResponseFile>
+    <CompilerResponseFile>
+    </CompilerResponseFile>
     <UnityProjectType>Game:1</UnityProjectType>
     <UnityBuildTarget>StandaloneWindows:5</UnityBuildTarget>
     <UnityVersion>5.3.1f1</UnityVersion>
-    <RootNamespace></RootNamespace>
+    <RootNamespace>
+    </RootNamespace>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
     <DebugType>pdbonly</DebugType>
@@ -68,6 +70,7 @@
     <Compile Include="Assets\Resources\Script\Card\Card.cs" />
     <Compile Include="Assets\Resources\Script\Card\CardData.cs" />
     <Compile Include="Assets\Resources\Script\Card\CardEnemy.cs" />
+    <Compile Include="Assets\Resources\Script\Card\OutCardRule.cs" />
     <Compile Include="Assets\Resources\Script\ChoiceHeroScene\ChoiceHeroSceneMG.cs" />
     <Compile Include="Assets\Resources\Script\Component\AdaptationResolution\AdaptationResolution.cs" />
     <Compile Include="Assets\Resources\Script\Component\AdaptationResolution\AdaptationResolutionHeight.cs" />

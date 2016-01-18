@@ -23,6 +23,13 @@ public class EnemyFightView : MonoBehaviour {
     private static Text _enemyCardNumsObj;
 
     private static Text _hpObj;
+
+    private static Dictionary<string, int> tttxt = new Dictionary<string, int>()
+    {
+        {
+            "ok",100
+        }
+    };
     //单列模式
     public static EnemyFightView instance = null;
     public static EnemyFightView getInstance()
@@ -39,6 +46,7 @@ public class EnemyFightView : MonoBehaviour {
         _enemyCardNumsObj = enemyCardNumsObj;
         _hpObj = hpObj;
 
+         int oioi = tttxt["ok"];
          EnemyFightController.getInstance().initEnemyFightData();
 
          _enemyCardNumsObj.text = EnemyFightData.getInstance().cardsNumber().ToString();

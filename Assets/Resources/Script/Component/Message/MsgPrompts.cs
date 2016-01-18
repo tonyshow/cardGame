@@ -43,7 +43,12 @@ public class MsgPrompts : Msg
     {
         GameObject Perfab = Resources.Load("Prefab/MsgPrompts") as GameObject;
         GameObject gameObject = Instantiate(Perfab, new Vector3(Screen.width * 0.5f, Screen.height * 0.5f, 0), new Quaternion(0, 0, 0, 1)) as GameObject;
-        MsgPrompts msgObj = gameObject.gameObject.AddComponent<MsgPrompts>();      
+        MsgPrompts msgObj = gameObject.gameObject.AddComponent<MsgPrompts>();
+        Tweener tw =  Perfab.transform.DOLocalMoveX(0.1f,1.0f);
+        tw.OnComplete(delegate()
+        {
+
+        });
         return msgObj;
     }
 
