@@ -14,7 +14,11 @@ public class MineFightView : MonoBehaviour {
 
     //5个卡位坐标
     private static Dictionary<int, Vector2> viewPosList = new Dictionary<int, Vector2>();
-       
+
+    static Dictionary<OUTTYPE, List<List<int>>> listOutCard = new Dictionary<OUTTYPE, List<List<int>>>();
+
+    //当前出牌组
+    static List<List<int>> currOutCardRule = new List<List<int>>();
     //卡牌的父节点
     private static GameObject parentGame = null;
 
@@ -124,6 +128,8 @@ public class MineFightView : MonoBehaviour {
                 EventListener.Get(card.getObj()).onDown = BtnCallBack;
          }
          outCardPosY = outCardPosY * doSize;
+
+         initOutCardRule();
 	}
 
      private void BtnCallBack(GameObject obj)
@@ -207,7 +213,27 @@ public class MineFightView : MonoBehaviour {
         yield return new WaitForSeconds(0.5f);
         Debug.Log("delay");
     }
-    
+
+    //初始化出牌规则
+    private void initOutCardRule()
+    {
+        listOutCard = OutCardRule.getInstance().getTip(OUTCARDRULE.TWO, viewCardDic);
+    }
+
+    //获得一组出牌规则
+    private List<List<int>> getItemOutCardRule()
+    {
+        OUTTYPE key = OUTTYPE.None;
+        foreach (var _key in listOutCard.Keys)
+        {
+            key = _key;
+            break;
+        }
+        List<List<int>> temp = listOutCard[key];
+        listOutCard.Remove(key);
+        return temp;
+    }
+
     //处理战斗view的事件
     public  IEnumerator FightViewTouchFn( Const.FIGHT_BTN_TYPE state)
     {
@@ -221,14 +247,25 @@ public class MineFightView : MonoBehaviour {
             }
             else if (Const.FIGHT_BTN_TYPE.TIP == state)
             {
-                noOut();
-                int posRand = Random.Range(1, 6);
-                cardToWaitPos(posRand); 
+
+                if (currOutCardRule.Count == 0)
+                {
+                    currOutCardRule = getItemOutCardRule();
+                }
+                if (currOutCardRule.Count > 0)
+                { 
+                    List<int> l = new List<int>();       
+                    l = currOutCardRule[0];
+                    currOutCardRule.RemoveAt(0);
+                    foreach (var pos in l)
+                    {
+                        cardToWaitPos(pos);
+                    } 
+                } 
             } 
             //出击
             else if (Const.FIGHT_BTN_TYPE.ATK == state)
-            {
-                
+            {                
                 for (int i = 1; i <= Const.FRIST_CARD_NUM; ++i)
                 {
                     if (viewCardDic.ContainsKey(i) && viewCardDic[i].getCardState() == Card.CardState.waitFight)

@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class ChoiceHeroSceneMG : MonoBehaviour {
 
     public  Image imgBg;
@@ -23,7 +24,8 @@ public class ChoiceHeroSceneMG : MonoBehaviour {
         int tag = int.Parse(touchTag);
         if (tag == 1)
         {
-            Application.LoadLevel("ChoiceEnemy"); 
+            //Application.LoadLevel("ChoiceEnemy");
+            SceneManager.LoadSceneAsync("ChoiceEnemy");
         }
         else
         {  

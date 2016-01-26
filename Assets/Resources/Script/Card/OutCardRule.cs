@@ -6,6 +6,7 @@ using System.Collections;
 using System.Collections.Generic;
 public enum OUTTYPE
 {
+    None,
     Single,            //单牌
     Sub,               //对子    
     threeAndTwo,       //三带二
@@ -58,159 +59,343 @@ public class OutCardRule
         dic.Add(OUTTYPE.straight, 6);
         dic.Add(OUTTYPE.bomb, 7);
         dic.Add(OUTTYPE.kingBomb, 8);
-        AllRule.Add(OUTCARDRULE.ONE, dic);  
+        AllRule.Add(OUTCARDRULE.ONE, dic);
+
+        dic.Clear();
+        dic.Add(OUTTYPE.kingBomb, 8);
+        dic.Add(OUTTYPE.bomb, 7);
+        dic.Add(OUTTYPE.straight, 6); 
+        dic.Add(OUTTYPE.twoSub, 5); 
+        dic.Add(OUTTYPE.threeAndOne, 4); 
+        dic.Add(OUTTYPE.threeAndTwo, 3);
+        dic.Add(OUTTYPE.Sub, 2);
+        dic.Add(OUTTYPE.Single, 1);
+        AllRule.Add(OUTCARDRULE.TWO, dic);
+
     }
 
 
-
-    private Dictionary<int, int> subNumber(Dictionary<int, int> data)
-    {
-        Dictionary<int, int> temp = new Dictionary<int, int>(); 
+    //对子
+    private List<List<int>> subNumber(Dictionary<int, Card> data)
+    { 
+        List<List<int>> l = new List<List<int>>();
+        List <int> temp = new List <int>();
         foreach (var item in data)
         {
             int key = item.Key;
-            int v = item.Value;
+            int v = item.Value.cardData.getNumber();
             foreach (var item1 in data)
             {
                 int key1 = item1.Key;
-                int v1 = item1.Value;
+                int v1 = item1.Value.cardData.getNumber();
                 if (key != key1 && v == v1)
                 {
-                    temp.Add(key, v);
+                    List<int> t = new List<int>();
+                    t.Add(key);
+                    t.Add(key1);
+                    int num = key * key1;
+                    if (!temp.Contains(num))
+                    {
+                        l.Add(t);
+                        temp.Add(num);
+                    } 
                 }
             }
         }
-        return temp;
+        return l;
     }
 
-     
 
-    private Dictionary<int, int> isHaveThree(Dictionary<int, int> data)
+    //三个
+    private List<List<int>> threeFn(Dictionary<int, Card> data)
     {
-        Dictionary<int, int> sub = subNumber(data);
-        Dictionary<int, int> temp = new Dictionary<int, int>();
-        
-        if ( sub.Count == 1)
+        List<List<int>> sub = subNumber(data);
+        if (sub.Count == 1 && data.Count >= 3 )
         {
-            int haveNum=-1;
-            foreach (var item in data)
-            {
-                haveNum = item.Value;
-            }
-          
+            int key1 = sub[0][0];
+            int key2 = sub[0][1];
+            int num = data[key1].cardData.getNumber();
             foreach (var item1 in data)
             {
-                if (item1.Value == haveNum )
+                int key = item1.Key;
+                if (item1.Value.cardData.getNumber() == num && key != key1 && key != key2)
                 {
-                    temp.Add(item1.Key, item1.Value);
+                    sub[0].Add(key);
                 }
-            }
+            } 
         }
-        return temp;
+        return sub;
     }
 
-   
-    private Dictionary<int, int> isHaveStraight(Dictionary<int, int> data)
+    //连子
+    private List<List<int>> straightFn(Dictionary<int, Card> data)
     {
-        Dictionary<int, int> temp = new Dictionary<int, int>();
-        if (isHaveThree(data).Count == 0 )
+        List<List<int>> l = new List<List<int>>();
+        List<int> tempList = new List<int>();
+        if (threeFn(data).Count == 0 )
         {
             foreach (var item in data)
             {
-                int num = item.Value;
+                int num1 = item.Value.cardData.getNumber();
+                int num2 = item.Value.cardData.getNumber() + 1;
+                int num3 = item.Value.cardData.getNumber() + 2;
+                bool isNum2 = false;
+                bool isNum3 = false;
 
-                int key1_2 = -1;
-                int key1_3 = -1;
-                int pos1_2 = -1;
-                int pos1_3 = -1;
-
-                foreach (var item1 in data)
+                foreach (var items in data)
                 {
-                    //为顺子第一位
-                    int tempNum1_2= num +1;
-                    int tempNum1_3= num+2;
+                    if (items.Value.cardData.getNumber() == num2)
+                    {
+                        isNum2 = true;
+                    }
+                    if (items.Value.cardData.getNumber() == num3)
+                    {
+                        isNum3 = true;
+                    }
+                }
+                //小
+                if (num3 < 14 && isNum2 && isNum3)
+                {
+                    List<int> d = new List<int>();
+                    bool find1 = false;
+                    bool find2 = false;
+                    int temp =0;
+                    foreach (int key in data.Keys)
+                    {
+                        if (data[key].cardData.getNumber() == num2 && !find1)
+                        {
+                            d.Add(key);
+                            find1 = true;
+                            temp = temp + key;
+                        }
+                        else if (data[key].cardData.getNumber() == num3 && !find2)
+                        {
+                            d.Add(key);
+                            find2 = true;
+                            temp = temp + key;
+                        }
+                    }
+                    if (d.Count > 1)
+                    {
+                        d.Add(item.Key);
+                        d.Sort(); 
+                        temp = temp + item.Key;
+                        if (!tempList.Contains(temp))
+                        {
+                            l.Add(d); 
+                            tempList.Add(temp);
+                        }
+                    }
+                }
 
-                    if (item1.Value == tempNum1_2)
+                //中
+                num1 = item.Value.cardData.getNumber();
+                num2 = item.Value.cardData.getNumber() - 1;
+                num3 = item.Value.cardData.getNumber() + 1;
+                isNum2 = false;
+                isNum3 = false;
+                foreach (var items in data)
+                {
+                    if (items.Value.cardData.getNumber() == num2)
                     {
-                        pos1_2 = item1.Value;
+                        isNum2 = true;
                     }
-                    if (item1.Value == tempNum1_3)
+                    if (items.Value.cardData.getNumber() == num3)
                     {
-                        pos1_3 = item1.Value;
+                        isNum3 = true;
                     }
+                }
+                if (num3 < 14 && isNum2 && isNum3)
+                {
+                    List<int> d = new List<int>();
+                    bool find1 = false;
+                    bool find2 = false;
+                    int temp = 0;
+                    foreach (int key in data.Keys)
+                    {
+                        if (data[key].cardData.getNumber() == num2 && !find1)
+                        {
+                            d.Add(key);
+                            find1 = true;
+                            temp = temp + key;
+                        }
+                        else if (data[key].cardData.getNumber() == num3 && !find2)
+                        {
+                            d.Add(key);
+                            find2 = true;
+                            temp = temp + key;
+                        }
+                    }
+                    if (d.Count > 1)
+                    {
+                        d.Add(item.Key);
+                        d.Sort();
+                        temp = temp + item.Key;
+                        if (!tempList.Contains(temp))
+                        {
+                            l.Add(d);
+                            tempList.Add(temp);
+                        }
+                    }
+                }
 
-                    //存在顺子
-                    if (key1_2 > 1 && pos1_2 != -1 && pos1_3 != -1)
+                //大
+                num1 = item.Value.cardData.getNumber();
+                num2 = item.Value.cardData.getNumber() - 1;
+                num3 = item.Value.cardData.getNumber() - 2;
+                isNum2 = false;
+                isNum3 = false;
+                foreach (var items in data)
+                {
+                    if (items.Value.cardData.getNumber() == num2)
                     {
-                        temp.Add(item.Key, item.Value);
-                        temp.Add(key1_2, pos1_2);
-                        temp.Add(key1_3, pos1_2);
-                        break;
+                        isNum2 = true;
                     }
+                    if (items.Value.cardData.getNumber() == num3)
+                    {
+                        isNum3 = true;
+                    }
+                }
+                if (num1 < 14 && isNum2 && isNum3 )
+                {
+                    List<int> d = new List<int>();
+                    bool find1 = false;
+                    bool find2 = false;
+                    int temp = 0;
+                    foreach (int key in data.Keys)
+                    {
+                        if (data[key].cardData.getNumber() == num2 && !find1)
+                        {
+                            d.Add(key);
+                            find1 = true;
+                            temp = temp + key;
+                        }
+                        else if (data[key].cardData.getNumber() == num3 && !find2)
+                        {
+                            d.Add(key);
+                            find2 = true;
+                            temp = temp + key;
+                        }
+                    }
+                    if (d.Count > 1)
+                    {
+                        d.Add(item.Key);
+                        d.Sort();
+                        temp = temp + item.Key;
+                        if (!tempList.Contains(temp))
+                        {
+                            l.Add(d);
+                            tempList.Add(temp);
+                        }
+                    }
+                }   
+            }
+        }
+    
+        return l;
+    }
 
-                    //为顺子第二位
-                    tempNum1_2 = num - 1;
-                    tempNum1_3 = num + 1;
-                    if (item1.Value == tempNum1_2)
-                    {
-                        pos1_2 = item1.Value;
-                    }
-                    if (item1.Value == tempNum1_3)
-                    {
-                        pos1_3 = item1.Value;
-                    }
+    //炸弹
+    private List<List<int>> bombFn(Dictionary<int, Card> data)
+    {
+        if (data.Count < 4)
+        {
+            return new List<List<int>>();
+        }
 
-                    //存在顺子
-                    if (tempNum1_2 > 0 && pos1_2 != -1 && pos1_3 != -1)
-                    {
-                        temp.Add(item.Key, item.Value);
-                        temp.Add(key1_2, pos1_2);
-                        temp.Add(key1_3, pos1_2);
-                        break;
-                    }
+        List<List<int>> temp = new List<List<int>>();
+        List<int> list = new List<int>();
+        foreach (var item in data)
+        {
+            list.Add(item.Value.cardData.getNumber());
+        } 
+        list.Sort();
 
-                    //为顺子第二位
-                    tempNum1_2 = num - 1;
-                    tempNum1_3 = num - 2;
-                    if (item1.Value == tempNum1_2)
-                    {
-                        pos1_2 = item1.Value;
-                    }
-                    if (item1.Value == tempNum1_3)
-                    {
-                        pos1_3 = item1.Value;
-                    }
+        if (data.Count == 4)
+        {
+            if (list[0] == list[1] &&  list[1] == list[2] &&  list[2] == list[3] ) 
+            {
+                List<int> bombL = new List<int>();
+                for (int i = 0; i < 4; ++i)
+                {
+                    bombL.Add(list[i]);
+                }
+                temp.Add(bombL);
+            }
+        }
+        else if (data.Count == 5)
+        {
+            if ( list[1] == list[2] &&  list[2] == list[3] && list[3] == list[4]  ) 
+            {
+                List<int> bombL = new List<int>();
+                for (int i = 1; i < 5; ++i)
+                {
+                    bombL.Add(list[i]);
+                }
+                temp.Add(bombL);
+            }
+            if (list[0] == list[1] && list[1] == list[2] && list[2] == list[3])
+            {
+                List<int> bombL = new List<int>();
+                for (int i = 0; i < 4; ++i)
+                {
+                    bombL.Add(list[i]);
+                }
+                temp.Add(bombL);
+            }
+        }
+       
+        return temp;
+    }
 
-                    //存在顺子
-                    if (tempNum1_2 > 1 && pos1_2 != -1 && pos1_3 != -1)
-                    {
-                        temp.Add(item.Key, item.Value);
-                        temp.Add(key1_2, pos1_2);
-                        temp.Add(key1_3, pos1_2);
-                        break;
-                    }
+    //王炸
+    private List<List<int>> kingBombFn(Dictionary<int, Card> data)
+    {
+        List<List<int>> temp = new List<List<int>>();
 
+        bool isNum2 = false;
+        bool isNum3 = false;
+        foreach (var items in data)
+        {
+            if (items.Value.cardData.getNumber() == 14)
+            {
+                isNum2 = true;
+            }
+            if (items.Value.cardData.getNumber() == 15)
+            {
+                isNum3 = true;
+            }
+        }
+
+        if ( isNum2 && isNum3 )
+        {
+            List<int> l = new List<int>();
+            foreach (var item in data)
+            {
+                if (item.Value.cardData.getNumber() == 14)
+                {
+                    l.Add(item.Key);
+                }
+                if (item.Value.cardData.getNumber() == 15)
+                {
+                    l.Add(item.Key);
                 }
             }
+            temp.Add(l);
         }
         return temp;
     }
 
-    private Dictionary<int, int> isHaveBomb(Dictionary<int, int> data)
-    {
-        Dictionary<int, int> temp = new Dictionary<int, int>();
-        return temp;
-    }
-    
-    
     //获得出牌规则
     //返回的是出牌的规则
-    public void getTip( OUTCARDRULE outCardRule , Dictionary<int,int> data )
+    public Dictionary<OUTTYPE, List<List<int>>> getTip(OUTCARDRULE outCardRule, Dictionary<int, Card> data)
     {
         //出牌顺序
         Dictionary<OUTTYPE, int> outRule = AllRule[outCardRule];
 
         List<OUTTYPE> outType = new List<OUTTYPE>();
+
+        Dictionary<OUTTYPE, List<List<int>>> dicList = new Dictionary<OUTTYPE, List<List<int>>>();
         //单必有
         foreach (var key in outRule.Keys)
         { 
@@ -219,42 +404,144 @@ public class OutCardRule
             if (  OUTTYPE.Single == type )
             {
                 outType.Add(type);
+                List<List<int>> temp = new List<List<int>>();
+                List<int> l = new List<int>();
+                foreach (var item in data)
+                { 
+                    l.Add(item.Key);
+                } 
+                l.Sort();
+                for (int i = 0; i < l.Count; ++i)
+                {
+                    List<int> lis = new List<int>();
+                    lis.Add(l[i]);
+                    temp.Add(lis);
+                }
+                dicList.Add(type, temp); 
             }
+            //对子
             else if (OUTTYPE.Sub == type)
             {
-                if (this.subNumber(data).Count > 0)
+                List<List<int>> temp = this.subNumber(data);
+                if (temp.Count > 0)
                 {
                     outType.Add(type);
+                    dicList.Add(type, temp); 
                 }
             }
+            //三带二
             else if (OUTTYPE.threeAndTwo == type)
             {
-                if ( data.Count ==5 && this.isHaveThree(data).Count > 0)
+                if ( data.Count ==5 && this.threeFn(data).Count > 0)
                 {
                     outType.Add(type);
+                    List<List<int>> temp = new List<List<int>>();
+                    List<int> l = new List<int>();
+                    foreach (var item in data)
+                    {
+                        l.Add(item.Key);
+                    }
+                    temp.Add(l);
+                    dicList.Add(type, temp); 
                 }
             }
+            //三带一
             else if (OUTTYPE.threeAndOne == type)
             {
-                if (data.Count >= 4 && this.isHaveThree(data).Count > 0)
+                
+                List<List<int>> threeList = this.threeFn(data);
+                if (data.Count >= 4 && threeList.Count > 0)
                 {
                     outType.Add(type);
+                    if (data.Count == 4)
+                    {
+                        List<List<int>> temp = new List<List<int>>();
+                        List<int> l = new List<int>();
+                        foreach (var item in data)
+                        {
+                            l.Add(item.Key);
+                        }
+                        temp.Add(l);
+                        dicList.Add(type, temp); 
+                    }
+                    else if (data.Count == 5)
+                    {
+                        List<List<int>> temp = new List<List<int>>();
+                        List<int> AllPosList = new List<int>();
+                        AllPosList.Add(1);
+                        AllPosList.Add(2);
+                        AllPosList.Add(3);
+                        AllPosList.Add(4);
+                        AllPosList.Add(5);
+                        foreach (var items in threeList)
+                        {
+                            int v = items[0];
+                            AllPosList.Remove(v); 
+                        }
+
+                        List<int> temp1 = threeList[0];
+                        temp1.Add(AllPosList[0]);
+                        List<int> temp2 = threeList[0];
+                        temp2.Add(AllPosList[1]);
+                        temp.Add(temp1);
+                        temp.Add(temp2);
+                        dicList.Add(type, temp); 
+                    } 
                 }
             }
+            //两对
             else if (OUTTYPE.twoSub == type)
             {
-                if ( subNumber(data).Count == 2 )
+                List<List<int>> l = subNumber(data);
+                if ( l.Count == 2 )
                 {
-                    outType.Add(type);
+                    int num1 = l[0][0];
+                    int num2 = l[1][0];
+                    if (Mathf.Abs(num1 - num2) == 1)
+                    {
+                        outType.Add(type);
+                        List<int> temp = new List<int>();
+                        temp.Add(l[0][0]);
+                        temp.Add(l[0][1]);
+                        temp.Add(l[1][0]);
+                        temp.Add(l[1][1]); 
+                        List<List<int>> s = new List<List<int>>();
+                        s.Add(temp);
+                        dicList.Add(type, s); 
+                    } 
                 }
             }
+            //连子
             else if (OUTTYPE.straight == type)
             {
-                if (isHaveStraight(data).Count >= 3)
+                List<List<int>> l = straightFn(data);
+                if (l.Count>0)
                 {
                     outType.Add(type);
+                    dicList.Add(type,l);
                 }
-            }            
-        } 
+            }
+            //炸弹
+            else if (OUTTYPE.bomb == type)
+            {
+                List<List<int>> l = bombFn(data);
+                if (l.Count>0)
+                {
+                    outType.Add(type);
+                    dicList.Add(type,l);
+                }
+            }
+            //王炸
+            else if (OUTTYPE.kingBomb == type)
+            {
+                List<List<int>> l = kingBombFn(data);
+                if (l.Count>0)
+                {
+                    outType.Add(type);
+                    dicList.Add(type,l);
+                }
+            }  
+        }
+        return dicList;
     }
 }
