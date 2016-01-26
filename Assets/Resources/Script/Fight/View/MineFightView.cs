@@ -41,10 +41,18 @@ public class MineFightView : MonoBehaviour {
         }
         return instance;
     }
-     
+
+    void clearnDictionary()
+    {
+        viewCardDic.Clear();
+        viewPosList.Clear();
+        listOutCard.Clear();
+        currOutCardRule.Clear();
+    }
 	// Use this for initialization
 	void Start () 
-    {  
+    {
+        clearnDictionary();
         MineFightController.getInstance().initMineFightData();
         _mineCardNumsObj = mineCardNumsObj;
         _mineCardNumsObj.text = MineFightData.getInstance().cardsNumber().ToString();
@@ -217,12 +225,18 @@ public class MineFightView : MonoBehaviour {
     //初始化出牌规则
     private void initOutCardRule()
     {
-        listOutCard = OutCardRule.getInstance().getTip(OUTCARDRULE.TWO, viewCardDic);
+
+        listOutCard = OutCardRule.getInstance().getTip(OUTCARDRULE.ONE, viewCardDic);
+        currOutCardRule.Clear();
     }
 
     //获得一组出牌规则
     private List<List<int>> getItemOutCardRule()
     {
+        if (listOutCard.Count == 0)
+        {
+            initOutCardRule();
+        }
         OUTTYPE key = OUTTYPE.None;
         foreach (var _key in listOutCard.Keys)
         {
@@ -244,10 +258,12 @@ public class MineFightView : MonoBehaviour {
             if (Const.FIGHT_BTN_TYPE.NO_OUT == state)
             {
                 noOut();
+                yield return new WaitForSeconds(1.0f);
+                FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.ENEMY;
             }
             else if (Const.FIGHT_BTN_TYPE.TIP == state)
             {
-
+                noOut();
                 if (currOutCardRule.Count == 0)
                 {
                     currOutCardRule = getItemOutCardRule();
@@ -277,13 +293,11 @@ public class MineFightView : MonoBehaviour {
                         yield return new WaitForSeconds(0.3f);
                     }
                 }
-                yield return new WaitForSeconds(0.3f);
+                yield return new WaitForSeconds(1.6f);
                 FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.ENEMY;
             }
         }
-    }
-
-
+    } 
     
     public  void createCardObject( int pos )
     {
@@ -296,7 +310,9 @@ public class MineFightView : MonoBehaviour {
             card.setScale(doSize);
             card.moveTo(viewPosList[pos]);
             viewCardDic.Add(pos, card);
-            EventListener.Get(card.getObj()).onClick = BtnCallBack;
+            EventListener.Get(card.getObj()).onDown = BtnCallBack;
+
+            initOutCardRule();
         }        
     }  
 }

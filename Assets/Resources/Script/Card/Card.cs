@@ -65,6 +65,10 @@ public class Card   : MonoBehaviour
         img.texture = texture;   
     }
 
+    public void setVisibleMaskImg( bool isVisible )
+    {
+        this.cardObj.transform.Find("cardMask").gameObject.SetActive(isVisible);
+    }
     public void addScript()
     {
        MineCollider cardCollision = this.cardObj.gameObject.AddComponent<MineCollider>();

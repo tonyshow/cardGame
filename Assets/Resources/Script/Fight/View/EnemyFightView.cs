@@ -23,13 +23,7 @@ public class EnemyFightView : MonoBehaviour {
     private static Text _enemyCardNumsObj;
 
     private static Text _hpObj;
-
-    private static Dictionary<string, int> tttxt = new Dictionary<string, int>()
-    {
-        {
-            "ok",100
-        }
-    };
+     
     //单列模式
     public static EnemyFightView instance = null;
     public static EnemyFightView getInstance()
@@ -39,14 +33,17 @@ public class EnemyFightView : MonoBehaviour {
             instance = new EnemyFightView();
         }
         return instance;
-    } 
-
+    }
+    void clearnDictionary()
+    {
+        viewCardDic.Clear();
+        viewPosList.Clear(); 
+    }
 	void Start () 
     {
+        clearnDictionary();
         _enemyCardNumsObj = enemyCardNumsObj;
-        _hpObj = hpObj;
-
-         int oioi = tttxt["ok"];
+        _hpObj = hpObj;  
          EnemyFightController.getInstance().initEnemyFightData();
 
          _enemyCardNumsObj.text = EnemyFightData.getInstance().cardsNumber().ToString();
@@ -165,11 +162,19 @@ public class EnemyFightView : MonoBehaviour {
         viewCardDic.Add(pos, card);
     }
 
-    public void randAtk()
+    public void  randAtk()
     {
-        int posRand = Random.Range(1, 6);
-        viewCardDic[posRand].getObj().transform.SetAsLastSibling();
-        viewCardDic[posRand].getObj().GetComponent<RectTransform>().DOLocalMove(FightUIData.getInstance().MineVec3+new Vector3(0,-50,0), 0.5f);
+        int posRand = 1;// Random.Range(1, 6);
+        viewCardDic[posRand].getObj().transform.SetAsLastSibling(); 
+        Sequence sq = DOTween.Sequence();
+        Tweener tw = viewCardDic[posRand].getObj().GetComponent<RectTransform>().DOLocalRotate(new Vector3(0, 90, 0), 0.2f);
+        tw.OnComplete(delegate()
+        {
+            viewCardDic[posRand].setVisibleMaskImg(false); 
+        });
+        sq.Append(tw);
+        sq.Append(viewCardDic[posRand].getObj().GetComponent<RectTransform>().DOLocalRotate(new Vector3(0, 0, 0), 1.5f));
+        sq.Append(viewCardDic[posRand].getObj().GetComponent<RectTransform>().DOLocalMove(FightUIData.getInstance().MineVec3 + new Vector3(0, -50, 0), 0.2f));
     }
 
     //敌方遭受攻击结束

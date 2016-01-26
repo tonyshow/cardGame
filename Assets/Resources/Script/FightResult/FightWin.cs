@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
-using UnityEngine.UI; 
+using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class FightWin : Msg
 {
     static private FightWin msgObj;
@@ -17,8 +18,8 @@ public class FightWin : Msg
     public void close( GameObject gb )
     {
 
-        Destroy(this.gameObject);
-        Application.LoadLevel("ChoiceHeroScene");
+        Destroy(this.gameObject); 
+        SceneManager.LoadSceneAsync("ChoiceHeroScene"); 
     }
     public bool init()
     {

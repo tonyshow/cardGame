@@ -2,14 +2,15 @@
 using System.Collections;
 using UnityEngine.UI; 
 using DG.Tweening;
+using UnityEngine.SceneManagement;
 public class LoginMG : MonoBehaviour {
 
 
     public float time = 2.0f;
     void eveTouchBg(GameObject obj)
     {
-        //SMGameEnvironment.Instance.SceneManager.LoadScreen("EnterGame");
-        Application.LoadLevel("EnterGame");
+        
+        SceneManager.LoadSceneAsync("EnterGame"); 
     }
     void callBack()
     {

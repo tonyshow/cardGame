@@ -1,6 +1,7 @@
 ﻿using UnityEngine;
 using System.Collections;
 using UnityEngine.UI;
+using UnityEngine.SceneManagement;
 public class EnterGameMG : MonoBehaviour {
 
 
@@ -8,14 +9,12 @@ public class EnterGameMG : MonoBehaviour {
     {
         string objName = obj.name;
         if( "Button" == objName )
-        {
-            Application.LoadLevel("ChoiceHeroScene");
-            //SMGameEnvironment.Instance.SceneManager.LoadScreen("ChoiceHeroScene");
+        { 
+            SceneManager.LoadSceneAsync("ChoiceHeroScene"); 
         }
         else if ( "Button2" == objName )
         {
-            Application.LoadLevel("ChoiceHeroScene");
-            //SMGameEnvironment.Instance.SceneManager.LoadScreen("ChoiceHeroScene");
+            SceneManager.LoadSceneAsync("ChoiceHeroScene"); 
         }
     }
 	// Use this for initialization

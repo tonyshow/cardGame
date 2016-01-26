@@ -2,7 +2,7 @@
 using System.Collections;
 using UnityEngine.UI;
 
-
+using UnityEngine.SceneManagement;
 public class MsgLoading : Msg
 { 
     private Slider slider;
@@ -30,13 +30,12 @@ public class MsgLoading : Msg
         {
             isGoScene = true;
             if (this.sceneName != null)
-            {
-                Application.LoadLevel(this.sceneName);
-                //SMGameEnvironment.Instance.SceneManager.LoadScreen(this.sceneName);
+            { 
+                SceneManager.LoadSceneAsync(this.sceneName);  
             }
             else
-            {
-                Application.LoadLevel("MsgLoading");
+            { 
+                SceneManager.LoadSceneAsync("MsgLoading");  
                // SMGameEnvironment.Instance.SceneManager.LoadScreen("MsgLoading");
             } 
         }

@@ -13,8 +13,8 @@ public class ChoiceHeroSceneMG : MonoBehaviour {
     private int[] unlock = new int[] { 1, 5, 9, 12, 15, 16, 18 };
 	// Use this for initialization
     void Eve( GameObject obj  )
-    {
-        Application.LoadLevel("EnterGame"); 
+    { 
+        SceneManager.LoadSceneAsync("EnterGame");
     }
 
     void EveSure(GameObject obj)
@@ -23,8 +23,7 @@ public class ChoiceHeroSceneMG : MonoBehaviour {
         Debug.Log(touchTag);
         int tag = int.Parse(touchTag);
         if (tag == 1)
-        {
-            //Application.LoadLevel("ChoiceEnemy");
+        { 
             SceneManager.LoadSceneAsync("ChoiceEnemy");
         }
         else
