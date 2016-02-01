@@ -127,9 +127,9 @@ public class EnemyFightView : MonoBehaviour {
     public void Update()
     {
         if (FightController.getInstance().RightToPlay == FightController.RIGHTTOPLAY.ENEMY)
-        {
+        {  
             FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.ENEMYING; 
-            randAtk();
+            randAtk(); 
         }
     }
 
@@ -163,18 +163,19 @@ public class EnemyFightView : MonoBehaviour {
     }
 
     public void  randAtk()
-    {
-        int posRand = 1;// Random.Range(1, 6);
-        viewCardDic[posRand].getObj().transform.SetAsLastSibling(); 
-        Sequence sq = DOTween.Sequence();
-        Tweener tw = viewCardDic[posRand].getObj().GetComponent<RectTransform>().DOLocalRotate(new Vector3(0, 90, 0), 0.2f);
+    {		 
+        int posRand =Random.Range(1, 6);
+        viewCardDic[posRand].getObj().transform.SetAsLastSibling();  
+		Sequence sq = DOTween.Sequence();  
+		sq.SetUpdate (true); 
+		Tweener tw = viewCardDic[posRand].getObj().GetComponent<RectTransform>().DOLocalRotate(new Vector3(0, 90, 0), 0.1f).SetRelative(); 
         tw.OnComplete(delegate()
         {
-            viewCardDic[posRand].setVisibleMaskImg(false); 
+            viewCardDic[posRand].setVisibleMaskImg(false);  
         });
         sq.Append(tw);
-        sq.Append(viewCardDic[posRand].getObj().GetComponent<RectTransform>().DOLocalRotate(new Vector3(0, 0, 0), 1.5f));
-        sq.Append(viewCardDic[posRand].getObj().GetComponent<RectTransform>().DOLocalMove(FightUIData.getInstance().MineVec3 + new Vector3(0, -50, 0), 0.2f));
+		sq.Append(viewCardDic[posRand].getObj().GetComponent<RectTransform>().DOLocalRotate(new Vector3(0, -90, 0), 0.4f).SetRelative());
+		sq.Append(viewCardDic[posRand].getObj().GetComponent<RectTransform>().DOLocalMove(FightUIData.getInstance().MineVec3 + new Vector3(0, -50, 0), 0.2f).SetEase(Ease.InBack));
     }
 
     //敌方遭受攻击结束

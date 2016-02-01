@@ -42,6 +42,7 @@ public class MineFightView : MonoBehaviour {
         return instance;
     }
 
+	//清理战斗中的静态数据
     void clearnDictionary()
     {
         viewCardDic.Clear();
@@ -140,8 +141,10 @@ public class MineFightView : MonoBehaviour {
          initOutCardRule();
 	}
 
+	//按钮点击回调
      private void BtnCallBack(GameObject obj)
      {
+         Debug.Log("sss");
          if (FightController.getInstance().RightToPlay == FightController.RIGHTTOPLAY.MINE)
          {
              Card card = obj.gameObject.GetComponent<Card>();
@@ -186,23 +189,24 @@ public class MineFightView : MonoBehaviour {
 
     //将卡牌移动到待战位置
     private void cardToWaitPos( int pos )
-    {
+	{   
         Card card = viewCardDic[pos];
-        card.setCardState(Card.CardState.waitFight);
+		card.setCardState(Card.CardState.waitFight);
         GameObject cardObj = card.getObj();
-        cardObj.GetComponent<RectTransform>().DOLocalMoveY(viewPosList[pos].y + outCardPosY, 0.1f);
-        cardObj.GetComponent<RectTransform>().DOShakeScale(0.5f, 0.1f,10,1);
+		cardObj.GetComponent<RectTransform>().DOLocalMoveY(outCardPosY, 0.1f).SetUpdate(true).SetRelative().SetRecyclable();
+		cardObj.GetComponent<RectTransform>().DOShakeScale(0.5f, 0.1f,10,1).SetUpdate(true).SetRelative();
     }
 
-    //将卡牌移动到卡槽位置
+    //将卡牌移动到初始位置
     private void cardToNonePos(int pos)
     {
         Card card = viewCardDic[pos];
         card.setCardState(Card.CardState.none);
         GameObject cardObj = card.getObj();
-        cardObj.GetComponent<RectTransform>().DOLocalMoveY(viewPosList[pos].y, 0.1f);
+		cardObj.GetComponent<RectTransform>().DOLocalMoveY(viewPosList[pos].y, 0.1f).SetUpdate(true);
     }
 
+	//不出
     private void noOut()
     {
         for (int i = 1; i <= Const.FRIST_CARD_NUM; ++i)
@@ -215,11 +219,6 @@ public class MineFightView : MonoBehaviour {
                 card.setCardState(Card.CardState.none);
             }
         } 
-    }
-    IEnumerator delay()
-    {
-        yield return new WaitForSeconds(0.5f);
-        Debug.Log("delay");
     }
 
     //初始化出牌规则
@@ -258,8 +257,7 @@ public class MineFightView : MonoBehaviour {
             if (Const.FIGHT_BTN_TYPE.NO_OUT == state)
             {
                 noOut();
-                yield return new WaitForSeconds(1.0f);
-                FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.ENEMY;
+				FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.ENEMY; 
             }
             else if (Const.FIGHT_BTN_TYPE.TIP == state)
             {
@@ -281,20 +279,28 @@ public class MineFightView : MonoBehaviour {
             } 
             //出击
             else if (Const.FIGHT_BTN_TYPE.ATK == state)
-            {                
+            {   
+				//此时是否有卡片可以出
+				bool isHaveCardCanOut = false;
                 for (int i = 1; i <= Const.FRIST_CARD_NUM; ++i)
                 {
                     if (viewCardDic.ContainsKey(i) && viewCardDic[i].getCardState() == Card.CardState.waitFight)
                     {
-                        FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.MINEING;
+						isHaveCardCanOut = true;
+						FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.MINEING;
                         int pos = viewCardDic[i].getCardData().Pos;
                         viewCardDic[i].getObj().transform.SetAsLastSibling();
-                        viewCardDic[i].getObj().GetComponent<RectTransform>().DOLocalMove(FightUIData.getInstance().EnemyVec3+new Vector3(0,Screen.height*0.2f,0), 0.1f);
+						viewCardDic [i].getObj ().GetComponent<RectTransform> ().DOLocalMove (FightUIData.getInstance ().EnemyVec3 + new Vector3 (0, Screen.height * 0.2f, 0), 0.1f)
+							.SetEase(Ease.InBack).SetUpdate(true);
                         yield return new WaitForSeconds(0.3f);
                     }
                 }
-                yield return new WaitForSeconds(1.6f);
-                FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.ENEMY;
+				if (isHaveCardCanOut) {
+					yield return new WaitForSeconds (0.6f);
+					FightController.getInstance ().RightToPlay = FightController.RIGHTTOPLAY.ENEMY;
+				} else {
+					MsgPrompts.create ("请选择至少一张卡牌",Color.red);
+				}
             }
         }
     } 
@@ -310,8 +316,10 @@ public class MineFightView : MonoBehaviour {
             card.setScale(doSize);
             card.moveTo(viewPosList[pos]);
             viewCardDic.Add(pos, card);
-            EventListener.Get(card.getObj()).onDown = BtnCallBack;
 
+            EventListener eve = EventListener.Get(card.getObj());
+			eve.onDown = BtnCallBack; 
+			eve.DOKill ();
             initOutCardRule();
         }        
     }  

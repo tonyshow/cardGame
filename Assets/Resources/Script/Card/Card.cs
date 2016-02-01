@@ -59,9 +59,8 @@ public class Card   : MonoBehaviour
         int number = this.cardData.getNumber();
         string path = "Res/Card/IconCard/icon_card_" + type + "_" + number  ;
 
-        Texture texture = Resources.Load(path) as Texture;
-          
-        RawImage img = cardObj.transform.FindChild("Pattern").GetComponent<RawImage>();
+        Texture texture = Resources.Load(path) as Texture; 
+        RawImage img = cardObj.transform.FindChild("cardBg").FindChild("Pattern").GetComponent<RawImage>();
         img.texture = texture;   
     }
 
@@ -71,8 +70,8 @@ public class Card   : MonoBehaviour
     }
     public void addScript()
     {
-       MineCollider cardCollision = this.cardObj.gameObject.AddComponent<MineCollider>();
-       Card card = this.cardObj.gameObject.AddComponent<Card>();
+        MineCollider cardCollision = this.cardObj.AddComponent<MineCollider>();
+        Card card = this.cardObj.AddComponent<Card>();
        
        card.cardData = this.cardData;
        card.cardObj = this.cardObj;
@@ -90,7 +89,7 @@ public class Card   : MonoBehaviour
 
         Texture texture = Resources.Load(path) as Texture;
 
-        RawImage img = cardObj.transform.FindChild("cardType").GetComponent<RawImage>();
+        RawImage img = cardObj.transform.FindChild("cardBg").FindChild("cardType").GetComponent<RawImage>();
         img.texture = texture;
     }
     public void setCardNumberView()
@@ -100,12 +99,12 @@ public class Card   : MonoBehaviour
         {
             string path = "Res/Card/CardNumber/icon_number_" + number;
             Texture texture = Resources.Load(path) as Texture;
-            RawImage img = cardObj.transform.FindChild("cardType").FindChild("cardNum").GetComponent<RawImage>();
+            RawImage img = cardObj.transform.FindChild("cardBg").FindChild("cardType").FindChild("cardNum").GetComponent<RawImage>();
             img.texture = texture;
         }
         else
         {
-            cardObj.transform.FindChild("cardType").FindChild("cardNum").transform.gameObject.SetActive(false);
+            cardObj.transform.FindChild("cardBg").FindChild("cardType").FindChild("cardNum").transform.gameObject.SetActive(false);
         }
     }
     public void setCardState( CardState state )
@@ -123,7 +122,10 @@ public class Card   : MonoBehaviour
         return this.cardObj;
     }
 
- 
+    public GameObject getBg()
+    {
+        return this.cardObj.transform.Find("cardBg").gameObject;
+    }
     public CardData getCardData()
     {
         return this.cardData;

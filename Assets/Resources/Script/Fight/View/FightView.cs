@@ -124,6 +124,7 @@ public class FightView : MonoBehaviour {
     }
     void Update()
     {
+		/*
         if (Input.GetButtonDown("Fire1"))
         {
             if (!mouseObj)
@@ -155,7 +156,7 @@ public class FightView : MonoBehaviour {
             {
                DestroyObject(mouseObj);
             } 
-        }
+        }*/
         
     }
 }

@@ -23,15 +23,26 @@ public class EnemyCollider : MonoBehaviour {
             Text Hp = HpObj.transform.GetComponent<Text>();
             Debug.Log(Hp);
             Hp.transform.parent = this.transform.parent;
-            Hp.transform.localPosition = FightUIData.getInstance().MineVec3 - new Vector3(0,100,0);
+			Hp.transform.localPosition = FightUIData.getInstance ().MineVec3;// - new Vector3(0,100,0);
             Hp.text = "-" + enemyCard.cardData.getNumber();
-            Tweener tw = HpObj.transform.DOLocalMoveY(-Screen.height*0.2f, 1.5f);
-            tw.OnComplete(delegate()
-            {
-                DestroyObject(HpObj);
-            });
-            touchEve(enemyCard);
+		
 
+
+
+			Sequence sq = DOTween.Sequence ();
+			sq.SetRelative ();
+			Tweener tw = HpObj.transform.DOLocalMoveY( Screen.height * 0.1f, 0.5f).SetEase(Ease.OutExpo).SetRelative();
+			tw.OnComplete(delegate()
+				{
+					DestroyObject(HpObj);
+				});  
+
+			sq.Join (tw);
+			sq.Join (HpObj.transform.DOScale(new Vector3(1.5f,1.5f,1.5f) ,0.5f )  );
+
+
+
+            touchEve(enemyCard); 
             atk();
         }
         else
