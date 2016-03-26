@@ -24,8 +24,7 @@ public class CardPrefabsCtr : MonoBehaviour {
 	public void SetUI()
     {
         if(null != this.card)
-        { 
-            Debug.Log(this.card.iconPath);
+        {  
             this.icon.sprite = AppFileManager.LoadSprite( this.card.iconPath );
             this.type.sprite = AppFileManager.LoadSprite(this.card.typeSprite);
             this.type.SetNativeSize();

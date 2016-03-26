@@ -69,6 +69,7 @@
     <Compile Include="Assets\Resources\Script\Card\Card.cs" />
     <Compile Include="Assets\Resources\Script\Card\CardData.cs" />
     <Compile Include="Assets\Resources\Script\Card\CardEnemy.cs" />
+    <Compile Include="Assets\Resources\Script\Card\FightCard.cs" />
     <Compile Include="Assets\Resources\Script\Card\OutCardRule.cs" />
     <Compile Include="Assets\Resources\Script\ChoiceHeroScene\ChoiceHeroSceneMG.cs" />
     <Compile Include="Assets\Resources\Script\Component\AdaptationResolution\AdaptationResolution.cs" />
@@ -100,12 +101,14 @@
     <Compile Include="Assets\Resources\Script\Fight\View\FightView.cs" />
     <Compile Include="Assets\Resources\Script\Fight\View\MineCollider.cs" />
     <Compile Include="Assets\Resources\Script\Fight\View\MineFightView.cs" />
+    <Compile Include="Assets\Resources\Script\FightNew\CardDataAnalysis.cs" />
     <Compile Include="Assets\Resources\Script\FightNew\FightAtkAnim.cs" />
     <Compile Include="Assets\Resources\Script\FightNew\FightCardAnim.cs" />
-    <Compile Include="Assets\Resources\Script\FightNew\FightCardState.cs" />
     <Compile Include="Assets\Resources\Script\FightNew\FightCardTransfrom.cs" />
     <Compile Include="Assets\Resources\Script\FightNew\FightCollider.cs" />
     <Compile Include="Assets\Resources\Script\FightNew\FightData.cs" />
+    <Compile Include="Assets\Resources\Script\FightNew\FightMineCard.cs" />
+    <Compile Include="Assets\Resources\Script\FightNew\FightState.cs" />
     <Compile Include="Assets\Resources\Script\FightNew\FightWindow.cs" />
     <Compile Include="Assets\Resources\Script\FightResult\FightWin.cs" />
     <Compile Include="Assets\Resources\Script\FileSystem\AppFileManager.cs" />

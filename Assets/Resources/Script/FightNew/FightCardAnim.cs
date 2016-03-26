@@ -22,8 +22,8 @@ public class FightCardAnim : MonoBehaviour {
     {
         this.transform.localPosition = this.initPos;
         this.transform.localScale = this.initScale; 
-        FightCardState state = this.transform.GetComponent<FightCardState>();
-        state.Set(Const.CardState.none);
+        //FightCardState state = this.transform.GetComponent<FightCardState>();
+        //state.Set(Const.CardState.none);
     }
 
     //发牌动画

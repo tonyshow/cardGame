@@ -7,7 +7,8 @@ using System.Collections.Generic;
 * 作者:tony  */
 public class FightData : MonoBehaviour {
 
-    private int _cardMaxNum = 54;
+    //单方血量
+    private int _hp = 210; 
     private int _mineMultiple = 0; 
     private int _enemyMultiple = 0;
 
@@ -150,5 +151,14 @@ public class FightData : MonoBehaviour {
             this._enemyMultiple++;
         }
         return mineListCard;
+    }
+
+    /// <summary>
+    /// 获取满血
+    /// </summary>
+    /// <returns></returns>
+    public int GetMaxHp()
+    {
+        return this._hp;
     }
 }

@@ -23,8 +23,7 @@ public class MineFightView : MonoBehaviour {
     private static GameObject parentGame = null;
 
     private static float doSize = 1.0f;
-
-    private static List<Card> choiceCardList = new List<Card>();
+     
 
     private static Text _mineCardNumsObj;
     private static Text _hpObj;

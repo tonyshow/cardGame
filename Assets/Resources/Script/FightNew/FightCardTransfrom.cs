@@ -85,10 +85,8 @@ public class FightCardTransfrom : MonoBehaviour {
 
             Vector2 vEnemy = new Vector2(-fightSize.x * 0.5f + (enemyCardScale * cardSize.x) * (i + 0.5f) + enemySpace * (i + 1), enemyY);
             enemyPosList.Add(vEnemy);
-        }
-
-        FightWindow fightWindow = this.GetComponent<FightWindow>();
-        fightWindow.InitCard();
+        } 
+        FightWindow fightWindow = this.GetComponent<FightWindow>(); 
     }
 
     /// <summary>
@@ -100,7 +98,9 @@ public class FightCardTransfrom : MonoBehaviour {
         vTransform.gameObject.SetActive(false);
         vTransform.SetParent(this.FightPanel.transform);
         vTransform.GetComponent<RectTransform>().anchoredPosition = mindPosList[vPos];
-        vTransform.localScale = Vector3.one * mineCardScale; 
+        vTransform.GetComponent<RectTransform>().sizeDelta = vTransform.GetComponent<RectTransform>().sizeDelta * mineCardScale;
+        vTransform.localScale = Vector3.one;
+        vTransform.SetAsLastSibling();
     }
 
     /// <summary>
@@ -109,10 +109,9 @@ public class FightCardTransfrom : MonoBehaviour {
     void doSize()
     {
         this.enemyY = fightSize.y * (0.5f - per) + fightSize.y * per * 0.5f;
-        this.mineY = fightSize.y * (0.5f - per) - fightSize.y * (1 - per) * 0.5f;
-        Debug.Log(mineY);
-        mineSpace = (fightSize.x - cardMaxNum * mineCardScale * cardSize.x) / (cardMaxNum + 1);
-        enemySpace = (fightSize.x - cardMaxNum * enemyCardScale * cardSize.x) / (cardMaxNum + 1);
+        this.mineY = fightSize.y * (0.5f - per) - fightSize.y * (1 - per) * 0.5f; 
+        mineSpace = (fightSize.x - cardMaxNum * mineCardScale * cardSize.x) / (cardMaxNum + 1.0f);
+        enemySpace = (fightSize.x - cardMaxNum * enemyCardScale * cardSize.x) / (cardMaxNum + 1.0f);
     }
 
     void Update()

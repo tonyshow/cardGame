@@ -71,7 +71,6 @@ public class OutCardRule
         dic.Add(OUTTYPE.Sub, 2);
         dic.Add(OUTTYPE.Single, 1);
         AllRule.Add(OUTCARDRULE.TWO, dic);
-
     }
 
 
