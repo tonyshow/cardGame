@@ -107,7 +107,7 @@ public class Card   : MonoBehaviour
             cardObj.transform.FindChild("cardBg").FindChild("cardType").FindChild("cardNum").transform.gameObject.SetActive(false);
         }
     }
-    public void setCardState( CardState state )
+    public void Set( CardState state )
     {
         this.cardState = state;
     }

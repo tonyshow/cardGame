@@ -1,6 +1,6 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2012
+# Visual Studio 2015
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cardGame.CSharp", "cardGame.CSharp.csproj", "{D502F0A8-6551-3CED-C100-0CA629F71EE3}"
 EndProject
 Global
