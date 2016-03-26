@@ -15,4 +15,10 @@ public class Const
         TIP,
         ATK
     }
+
+    public enum CardState
+    {
+        none = 0,
+        waitFight = 1,
+    }
 }

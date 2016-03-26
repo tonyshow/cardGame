@@ -150,12 +150,12 @@ public class MineFightView : MonoBehaviour {
              Card card = obj.gameObject.GetComponent<Card>();
              if (card.getCardState() == Card.CardState.waitFight)
              {
-                 card.setCardState(Card.CardState.none);
+                 card.Set(Card.CardState.none);
                  cardToNonePos(card.getCardData().Pos);
              }
              else if (card.getCardState() == Card.CardState.none)
              {
-                 card.setCardState(Card.CardState.waitFight);
+                 card.Set(Card.CardState.waitFight);
                  cardToWaitPos(card.getCardData().Pos);
              }
          }
@@ -191,7 +191,7 @@ public class MineFightView : MonoBehaviour {
     private void cardToWaitPos( int pos )
 	{   
         Card card = viewCardDic[pos];
-		card.setCardState(Card.CardState.waitFight);
+		card.Set(Card.CardState.waitFight);
         GameObject cardObj = card.getObj();
 		cardObj.GetComponent<RectTransform>().DOLocalMoveY(outCardPosY, 0.1f).SetUpdate(true).SetRelative().SetRecyclable();
 		cardObj.GetComponent<RectTransform>().DOShakeScale(0.5f, 0.1f,10,1).SetUpdate(true).SetRelative();
@@ -201,7 +201,7 @@ public class MineFightView : MonoBehaviour {
     private void cardToNonePos(int pos)
     {
         Card card = viewCardDic[pos];
-        card.setCardState(Card.CardState.none);
+        card.Set(Card.CardState.none);
         GameObject cardObj = card.getObj();
 		cardObj.GetComponent<RectTransform>().DOLocalMoveY(viewPosList[pos].y, 0.1f).SetUpdate(true);
     }
@@ -213,10 +213,10 @@ public class MineFightView : MonoBehaviour {
         {
             if ( viewCardDic.ContainsKey(i) )
             {
-                viewCardDic[i].setCardState(Card.CardState.none);
+                viewCardDic[i].Set(Card.CardState.none);
                 viewCardDic[i].getObj().GetComponent<RectTransform>().anchoredPosition3D = viewPosList[i];
                 Card card = viewCardDic[i].getObj().GetComponent<Card>();
-                card.setCardState(Card.CardState.none);
+                card.Set(Card.CardState.none);
             }
         } 
     }
@@ -288,7 +288,7 @@ public class MineFightView : MonoBehaviour {
                     {
 						isHaveCardCanOut = true;
 						FightController.getInstance().RightToPlay = FightController.RIGHTTOPLAY.MINEING;
-                        int pos = viewCardDic[i].getCardData().Pos;
+                     
                         viewCardDic[i].getObj().transform.SetAsLastSibling();
 						viewCardDic [i].getObj ().GetComponent<RectTransform> ().DOLocalMove (FightUIData.getInstance ().EnemyVec3 + new Vector3 (0, Screen.height * 0.2f, 0), 0.1f)
 							.SetEase(Ease.InBack).SetUpdate(true);

@@ -1,0 +1,15 @@
+fileFormatVersion: 2
+guid: cccad180da6bec74bbc54e5a115636eb
+timeCreated: 1458571395
+licenseType: Free
+MonoImporter:
+  serializedVersion: 2
+  defaultReferences:
+  - FightPanel: {instanceID: 0}
+  - mineCardPrefabs: {fileID: 105164, guid: 966b180ed78b9e94b81ecbe14384b10e, type: 2}
+  - enemyCardPrefabs: {fileID: 105164, guid: 966b180ed78b9e94b81ecbe14384b10e, type: 2}
+  executionOrder: 0
+  icon: {instanceID: 0}
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
