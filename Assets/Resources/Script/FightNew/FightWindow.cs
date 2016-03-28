@@ -13,9 +13,18 @@ public class FightWindow : MonoBehaviour
     [SerializeField]
     FightMineCard fightMineCard;
 
-    //我方牌管理
+    //敌方牌管理
+    [SerializeField]
+    FightEnemyCard fightEnemyCard;
+
+    //战斗数据管理
     [SerializeField]
     FightData fightData;
+
+    //剩余卡牌数
+    [SerializeField]
+    Text TextRemainingCardNum;
+
     void Awake()
     { 
         this.fightState.rightToPlay = FightState.RightToPlay.mine;
@@ -26,6 +35,8 @@ public class FightWindow : MonoBehaviour
         this.fightData.CreateAPair();
         //初始化我方首发卡牌
         this.fightMineCard.CreateFristCard();
+        this.fightEnemyCard.CreateFristCard();
+        this.RefreshData();
     }
     
     /// <summary>
@@ -47,4 +58,12 @@ public class FightWindow : MonoBehaviour
         MsgPrompts.create("蓄力"); 
         this.fightState.Waiver(); 
     } 
+
+    /// <summary>
+    /// 刷新界面数据
+    /// </summary>
+    public void RefreshData()
+    {
+        this.TextRemainingCardNum.text = string.Format("剩余卡牌:{0}", fightData.CardNumber());
+    }
 }

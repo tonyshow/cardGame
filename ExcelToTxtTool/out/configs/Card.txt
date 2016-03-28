@@ -52,5 +52,5 @@ id	number	type	hurt	iconPath	typeSprite	numberSprite
 50	11	4	11	Sprite/Card/IconCard/icon_card_4_11	Sprite/Card/CardType/icon_cardType_4	Sprite/Card/CardNumber/icon_number_11
 51	12	4	12	Sprite/Card/IconCard/icon_card_4_12	Sprite/Card/CardType/icon_cardType_4	Sprite/Card/CardNumber/icon_number_12
 52	13	4	13	Sprite/Card/IconCard/icon_card_4_13	Sprite/Card/CardType/icon_cardType_4	Sprite/Card/CardNumber/icon_number_13
-53	1	5	15	Sprite/Card/IconCard/icon_card_5_1	Sprite/Card/CardType/icon_cardType_5	Sprite/Card/CardNumber/icon_number_15
-54	2	5	16	Sprite/Card/IconCard/icon_card_5_2	Sprite/Card/CardType/icon_cardType_6	Sprite/Card/CardNumber/icon_number_16
+53	14	5	15	Sprite/Card/IconCard/icon_card_5_1	Sprite/Card/CardType/icon_cardType_5	Sprite/Card/CardNumber/icon_number_15
+54	15	5	16	Sprite/Card/IconCard/icon_card_5_2	Sprite/Card/CardType/icon_cardType_6	Sprite/Card/CardNumber/icon_number_16

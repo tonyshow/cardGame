@@ -21,9 +21,10 @@ public class FightCard : MonoBehaviour {
 
     //卡牌数据
     public CardDetail cardDetail;
-
-    //卡牌战斗位置
+     
     int _pos;
+     
+    int _hurtMultiple = 1;
 
     /// <summary>
     /// 设置卡牌数据
@@ -52,4 +53,14 @@ public class FightCard : MonoBehaviour {
     /// 位置
     /// </summary>
     public int pos { set { this._pos = value; } get { return this._pos; } }
+
+    /// <summary>
+    /// 伤害倍数
+    /// </summary>
+    public int hurtMultiple { set { this._hurtMultiple = value; } get { return this._hurtMultiple; } }
+
+    public int GetHurt()
+    {
+        return this.cardDetail.number * this._hurtMultiple;
+    }
 }

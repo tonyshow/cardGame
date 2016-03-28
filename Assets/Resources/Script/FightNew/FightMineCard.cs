@@ -5,46 +5,19 @@ using System.Collections.Generic;
 
 /** 我方卡牌数据
  * 作者：tony */
-public class FightMineCard : MonoBehaviour {
-
-    //卡牌预设
-    [SerializeField]
-    GameObject CardPrefabs;
-
-    [SerializeField]
-    FightState fightState;
-  
-    //卡牌坐标管理
-    [SerializeField]
-    FightCardTransfrom fightCardTransfrom;
-
-    //战斗卡牌数据管理
-    [SerializeField]
-    FightData fightData; 
-
-    //卡牌对象集合int为卡牌id，GameObject为卡牌对象
-    Dictionary<int, GameObject> dicCardObj = new Dictionary<int, GameObject>();
-
-    //当前战场空位    key为战场位置标号 
-    Dictionary<int, int> listSpcaePos = new Dictionary<int, int>();
-
-    //目标位置
-    [SerializeField]
-    Transform targetTransform;
-
-    /**卡牌攻击间隔*/
-    [SerializeField]
-    float atkSpaceTime = 0.2f;
-
-    /**卡牌发牌间隔*/
-    [SerializeField]
-    float playingTime = 0.2f;
+public class FightMineCard : FightCardWindow
+{ 
+    void Start()
+    {
+        this.hp = this.fightData.GetMaxHp();
+        this.TextHp.text = this.hp.ToString();
+    }
 
     /// <summary>
     /// 创建战斗卡牌
     /// </summary>
     /// <param name="vCardId"></param>
-    public void CreateCard( int vPos , float vPlayingTime )
+    override public void CreateCard( int vPos , float vPlayingTime )
     {
         if ( this.listSpcaePos.ContainsKey(vPos) )
         {
@@ -53,12 +26,14 @@ public class FightMineCard : MonoBehaviour {
 
             //卡牌对象
             GameObject CardObj = GameObject.Instantiate(CardPrefabs) as GameObject;
-
+            CardObj.transform.name = "mineCard";
             //设置卡牌对象上的数据
             FightCard fightCard = CardObj.GetComponent<FightCard>();
             fightCard.pos = vPos;
             CardDetail cardDetail = ConfigDatas.Inst.card.GetCardDetail(cardId);
             fightCard.SetCardDetail(cardDetail);
+
+            this.listFightCard.Add(fightCard);
 
             //设置卡牌UI数据
             CardPrefabsCtr cardPrefabsCtr = CardObj.GetComponent<CardPrefabsCtr>();
@@ -87,7 +62,7 @@ public class FightMineCard : MonoBehaviour {
     /// <summary>
     /// 创建首发卡牌
     /// </summary>
-    public void CreateFristCard()
+    override public void CreateFristCard()
     {
         for (int i = 0; i < 5; ++i)
         {
@@ -124,7 +99,7 @@ public class FightMineCard : MonoBehaviour {
     /// 执行攻击
     /// </summary>
     /// <returns></returns>
-    public IEnumerator DoAtk()
+    override public IEnumerator DoAtk()
     { 
         List<int> canAtkCardList = new List<int>();
         foreach( KeyValuePair<int , GameObject> item in dicCardObj)
@@ -138,9 +113,9 @@ public class FightMineCard : MonoBehaviour {
                 if (!listSpcaePos.ContainsKey(vFightCard.pos))
                 {
                     listSpcaePos.Add(vFightCard.pos, vFightCard.pos);
+                    this.listFightCard.Remove(vFightCard);
                 }
-            }
-           
+            } 
         }
         if(canAtkCardList.Count == 0 )
         {
@@ -152,17 +127,18 @@ public class FightMineCard : MonoBehaviour {
             {
                 this.dicCardObj.Remove(canAtkCardList[i]);
             }
-            yield return new WaitForSeconds(canAtkCardList.Count * atkSpaceTime + 1); 
-            this.MineLicensing();
-
-            //this.fightState.Waiver();
+            
+            yield return new WaitForSeconds(canAtkCardList.Count * atkSpaceTime + 1);
+            this.Licensing();
+            yield return new WaitForSeconds(canAtkCardList.Count * atkSpaceTime + 1);
+            this.fightState.Waiver();
         } 
     }
 
     /// <summary>
-    /// 给我方补发牌
+    /// 补发牌
     /// </summary>
-    void MineLicensing()
+    override public void Licensing()
     {
         if (this.fightData.IsHaveCard())
         {
@@ -171,8 +147,43 @@ public class FightMineCard : MonoBehaviour {
             { 
                 this.CreateCard(item.Key, number* playingTime);
                 ++number;
+                this.fightWindow.RefreshData();
             } 
             this.listSpcaePos.Clear();
         }
+    }
+
+    //数字从小到大排序
+    int sortNumber(FightCard a, FightCard b)
+    {
+        if( a.GetCardDetail().number < b.GetCardDetail().number)
+        {
+            return -1;
+        }
+        else
+        {
+            return 0;
+        }
+    }
+
+    /// <summary>
+    /// 表现的卡牌位置排序
+    /// </summary>
+    public void sortCardGameObject()
+    {
+        this.listFightCard.Sort(sortNumber);
+        for(int i = 0; i < this.listFightCard.Count; ++i )
+        {
+            listFightCard[i].pos = i;
+            FightCard fightCard = this.listFightCard[i];
+            int cardId = fightCard.GetCardDetail().id;
+            GameObject obj = this.dicCardObj[cardId];
+            FightCard vFightCard = obj.GetComponent<FightCard>();
+            vFightCard.pos = i;
+
+            //卡牌动画
+            FightCardAnim cardAnim = obj.GetComponent<FightCardAnim>();
+            cardAnim.PlayTo( this.fightCardTransfrom.GetPos(i) );
+        } 
     }
 }

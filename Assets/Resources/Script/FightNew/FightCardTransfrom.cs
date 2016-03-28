@@ -159,4 +159,14 @@ public class FightCardTransfrom : MonoBehaviour {
     {
         return this.cardMaxNum;
     }
+
+    /// <summary>
+    /// 我方卡牌位置集合
+    /// </summary>
+    /// <returns></returns>
+    public float GetPos(int vPos)
+    {
+        return mindPosList[vPos].x;
+    }
+
 }

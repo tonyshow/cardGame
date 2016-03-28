@@ -6,6 +6,7 @@ public class FightCardAnim : MonoBehaviour {
     Vector3 initPos = new Vector3();
     Vector3 initScale = new Vector3();
 
+    
     void Start()
     {
         this.initPos = this.transform.localPosition;
@@ -21,9 +22,12 @@ public class FightCardAnim : MonoBehaviour {
     public void PlayToInitPos()
     {
         this.transform.localPosition = this.initPos;
-        this.transform.localScale = this.initScale; 
-        //FightCardState state = this.transform.GetComponent<FightCardState>();
-        //state.Set(Const.CardState.none);
+        this.transform.localScale = this.initScale;  
+    }
+
+    public void PlayTo( float vX )
+    {
+        this.transform.localPosition = new Vector3(vX,this.transform.localPosition.y,0); 
     }
 
     //发牌动画
@@ -34,7 +38,7 @@ public class FightCardAnim : MonoBehaviour {
         this.transform.position = new Vector3(Screen.width * 1.5f, Screen.height*0.5f,0);
         this.gameObject.SetActive(true);
         transform.SetAsLastSibling();
-        Tweener tw = this.transform.DOMove(temp, 1.5f).SetEase(Ease.OutQuint).SetUpdate(true);
+        Tweener tw = this.transform.DOMove(temp, 1.0f).SetEase(Ease.OutQuint).SetUpdate(true);
 
         tw.OnComplete(delegate ()
         {
@@ -42,4 +46,6 @@ public class FightCardAnim : MonoBehaviour {
             this.initScale = this.transform.localScale;
         }); 
     }
+
+
 }
