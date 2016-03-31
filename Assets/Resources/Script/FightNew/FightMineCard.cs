@@ -6,7 +6,11 @@ using System.Collections.Generic;
 /** 我方卡牌数据
  * 作者：tony */
 public class FightMineCard : FightCardWindow
-{ 
+{
+    //上一次出的牌数据
+    [SerializeField]
+    LastFightData lastFightData;
+
     void Start()
     {
         this.hp = this.fightData.GetMaxHp();
@@ -22,7 +26,7 @@ public class FightMineCard : FightCardWindow
         if ( this.listSpcaePos.ContainsKey(vPos) )
         {
             //从牌库中获取卡牌id
-            int cardId = this.fightData.RandCard();
+            int cardId =  this.fightData.RandCard();
 
             //卡牌对象
             GameObject CardObj = GameObject.Instantiate(CardPrefabs) as GameObject;
@@ -100,13 +104,27 @@ public class FightMineCard : FightCardWindow
     /// </summary>
     /// <returns></returns>
     override public IEnumerator DoAtk()
-    { 
+    {
+
+        //foreach (KeyValuePair<int, GameObject> item in dicCardObj)
+        //{
+        //    FightCard vFightCard = item.Value.GetComponent<FightCard>();
+        //    if (vFightCard.postionState == FightCard.PostionState.choice)
+        //    {
+
+        //    }
+        //}
+
+
         List<int> canAtkCardList = new List<int>();
-        foreach( KeyValuePair<int , GameObject> item in dicCardObj)
+        List<FightCard> list = new List<FightCard>();
+        int numberSum = 0;
+        foreach ( KeyValuePair<int , GameObject> item in dicCardObj)
         {
             FightCard vFightCard = item.Value.GetComponent<FightCard>();
             if(vFightCard.postionState == FightCard.PostionState.choice )
-            { 
+            {
+                list.Add(vFightCard);
                 FightAtkAnim atkAnim = item.Value.GetComponent<FightAtkAnim>();
                 atkAnim.PlayAtk(canAtkCardList.Count * atkSpaceTime);
                 canAtkCardList.Add(vFightCard.GetCardDetail().id);
@@ -114,10 +132,14 @@ public class FightMineCard : FightCardWindow
                 {
                     listSpcaePos.Add(vFightCard.pos, vFightCard.pos);
                     this.listFightCard.Remove(vFightCard);
+                    numberSum = numberSum + vFightCard.GetCardDetail().number;
                 }
             } 
         }
-        if(canAtkCardList.Count == 0 )
+
+        lastFightData.CalculationType(list, numberSum);
+
+        if (canAtkCardList.Count == 0 )
         {
             MsgPrompts.create("未选择一张卡片");
         }
@@ -150,7 +172,7 @@ public class FightMineCard : FightCardWindow
                 this.fightWindow.RefreshData();
             } 
             this.listSpcaePos.Clear();
-        }
+        } 
     }
 
     //数字从小到大排序
@@ -185,5 +207,27 @@ public class FightMineCard : FightCardWindow
             FightCardAnim cardAnim = obj.GetComponent<FightCardAnim>();
             cardAnim.PlayTo( this.fightCardTransfrom.GetPos(i) );
         } 
+    }
+
+    //我方获得出牌权
+    public void MineGetWaiver()
+    {
+        if (lastFightData.GetOutType() == OUTTYPE.None)
+        {
+            MsgPrompts.create("表示敌方要不起我方牌 我方可以随意出牌");
+        }
+        else
+        {
+            List<FightCard> temp = this.isCanWantLastCard(lastFightData);
+            if (temp.Count == 0)
+            {
+                MsgPrompts.create("要不起自动交出出牌权"); 
+            }
+            else
+            {
+                MsgPrompts.create("要的起");
+            }
+        }
+        
     }
 }

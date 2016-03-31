@@ -24,6 +24,15 @@ public class FightWindow : MonoBehaviour
     //剩余卡牌数
     [SerializeField]
     Text TextRemainingCardNum;
+      
+    [SerializeField]
+    LastFightData lastFightData;
+
+    [SerializeField]
+    GameObject LastCardPanel;
+
+    [SerializeField]
+    GameObject CardPrefabs;
 
     void Awake()
     { 
@@ -55,7 +64,8 @@ public class FightWindow : MonoBehaviour
     /// </summary>
     public void EveStorage()
     {
-        MsgPrompts.create("蓄力"); 
+        MsgPrompts.create("我方蓄力");
+        this.lastFightData.ClearUp();
         this.fightState.Waiver(); 
     } 
 
@@ -65,5 +75,25 @@ public class FightWindow : MonoBehaviour
     public void RefreshData()
     {
         this.TextRemainingCardNum.text = string.Format("剩余卡牌:{0}", fightData.CardNumber());
+    }
+
+    public void RefreshLastObject(List<FightCard> vAllNoChoiceCard)
+    {
+        for( int i = 0; i < LastCardPanel.transform.childCount; ++i)
+        {
+            DestroyObject(LastCardPanel.transform.GetChild(i).gameObject);
+        }
+
+        for (int i = 0; i < vAllNoChoiceCard.Count ; ++i)
+        {
+            //卡牌对象
+            GameObject CardObj = GameObject.Instantiate(CardPrefabs) as GameObject;
+            CardObj.transform.SetParent(LastCardPanel.transform);
+            CardObj.transform.localPosition = Vector3.zero;
+            CardObj.transform.localScale = Vector3.one;
+            //设置卡牌UI数据
+            CardPrefabsCtr cardPrefabsCtr = CardObj.GetComponent<CardPrefabsCtr>();
+            cardPrefabsCtr.SetCard(vAllNoChoiceCard[i].GetCardDetail());
+        }
     }
 }

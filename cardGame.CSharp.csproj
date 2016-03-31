@@ -113,6 +113,7 @@
     <Compile Include="Assets\Resources\Script\FightNew\FightMineCard.cs" />
     <Compile Include="Assets\Resources\Script\FightNew\FightState.cs" />
     <Compile Include="Assets\Resources\Script\FightNew\FightWindow.cs" />
+    <Compile Include="Assets\Resources\Script\FightNew\LastFightData.cs" />
     <Compile Include="Assets\Resources\Script\FightResult\FightWin.cs" />
     <Compile Include="Assets\Resources\Script\FileSystem\AppFileManager.cs" />
     <Compile Include="Assets\Resources\Script\Inherit\ImageCustom.cs" />

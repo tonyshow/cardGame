@@ -20,7 +20,7 @@ public class FightCard : MonoBehaviour {
     PostionState _postionState = PostionState.Unchecked;
 
     //卡牌数据
-    public CardDetail cardDetail;
+    CardDetail cardDetail;
      
     int _pos;
      

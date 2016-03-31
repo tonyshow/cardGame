@@ -21,8 +21,10 @@ public class FightCardAnim : MonoBehaviour {
 
     public void PlayToInitPos()
     {
-        this.transform.localPosition = this.initPos;
-        this.transform.localScale = this.initScale;  
+        //this.transform.localPosition = this.initPos;
+        //this.transform.localScale = this.initScale;  
+
+        this.GetComponent<RectTransform>().DOLocalMoveY(-10, 0.1f).SetUpdate(true).SetRelative().SetRecyclable();
     }
 
     public void PlayTo( float vX )

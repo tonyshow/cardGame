@@ -1,12 +1,19 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
 using System.Collections;
 using System;
 /** 战斗状态 
  * 作者：tony */
 public class FightState : MonoBehaviour {
 
+    [SerializeField]
+    FightMineCard fightMindCard;
+
+    [SerializeField]
+    Text WaiverText;
+
     //出牌权
-	public enum RightToPlay
+    public enum RightToPlay
     {
         //未确定出牌权
         none = 0,
@@ -31,15 +38,17 @@ public class FightState : MonoBehaviour {
         if(this._rightToPlay == RightToPlay.enemy)
         {
             this._rightToPlay = RightToPlay.mine;
+            fightMindCard.MineGetWaiver();
+            WaiverText.text = "我方出牌";
             return;
         }
         this._rightToPlay = RightToPlay.enemy;
         if(this.enemyAction!= null)
         {
             this.enemyAction();
+            WaiverText.text = "敌方出牌";
         }
-        return;
-
+        return; 
     }
 
     

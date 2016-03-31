@@ -10,13 +10,15 @@ public class MsgPrompts : Msg
     void Start()
     {
         runAction(this.gameObject);
-        Debug.Log("start");
     }
     
     void callBack()
     {
-        Debug.Log("callBack");
-        Destroy(this.gameObject);  
+        Tweener twenner = this.transform.DOScale(2.5f, 1.0f).SetEase(Ease.OutBack);
+        twenner.OnComplete(delegate()
+        {
+            this.close();
+        });
     }
     public  void close()
     {
@@ -28,15 +30,8 @@ public class MsgPrompts : Msg
     }
 
     void runAction( GameObject obj )
-    {
-//         Hashtable args = new Hashtable();
-//         args.Add("time", 1.0f);     
-//         args.Add("y", Screen.height*0.75f);
-//         args.Add("easetype","easeOutSine");
-//         args.Add("oncomplete", "callBack");
-//         iTween.MoveTo(obj, args ); 
-
-        Tweener twenner = obj.transform.DOLocalMoveY(Screen.height * 0.75f, 1.0f);
+    { 
+        Tweener twenner = obj.transform.DOScale(1.5f , 1.0f).SetEase(Ease.OutBack); 
         twenner.OnComplete(callBack);
     }
     public static MsgPrompts create()//Component t

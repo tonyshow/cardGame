@@ -7,8 +7,9 @@ using System.Collections.Generic;
 public enum OUTTYPE
 {
     None,
-    Single,            //单牌
-    Sub,               //对子    
+    Single,            //单牌 
+    Sub,               //对子 
+    three,             //三个
     threeAndTwo,       //三带二
     threeAndOne,       //三带一
     twoSub,            //两对
@@ -427,27 +428,10 @@ public class OutCardRule
                     outType.Add(type);
                     dicList.Add(type, temp); 
                 }
-            }
-            //三带二
-            else if (OUTTYPE.threeAndTwo == type)
-            {
-                if ( data.Count ==5 && this.threeFn(data).Count > 0)
-                {
-                    outType.Add(type);
-                    List<List<int>> temp = new List<List<int>>();
-                    List<int> l = new List<int>();
-                    foreach (var item in data)
-                    {
-                        l.Add(item.Key);
-                    }
-                    temp.Add(l);
-                    dicList.Add(type, temp); 
-                }
-            }
-            //三带一
-            else if (OUTTYPE.threeAndOne == type)
-            {
-                
+            } 
+            //金花
+            else if (OUTTYPE.three == type)
+            {                
                 List<List<int>> threeList = this.threeFn(data);
                 if (data.Count >= 4 && threeList.Count > 0)
                 {
